@@ -28,7 +28,6 @@ describe('Manga1000 Tests', () => {
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty
     expect(data.titles, 'Missing Titles').to.be.not.empty
-    console.log(data)
   })
 
   it('Get Chapters', async () => {
