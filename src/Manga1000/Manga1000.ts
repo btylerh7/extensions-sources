@@ -96,7 +96,7 @@ export class Manga1000 extends Source {
     chapterId: string
   ): Promise<ChapterDetails> {
     const request = createRequestObject({
-      url: encodeURI(`${M1000_DOMAIN}/${mangaId}`),
+      url: encodeURI(`${M1000_DOMAIN}/${chapterId}`),
       method,
       headers,
     })
