@@ -21,7 +21,7 @@ import {
   parseChapters,
   parseChapterDetails,
   parseSearchRequest,
-} from './Manga1000Parser'
+} from '../Manga1000Parser'
 
 export const M1000_DOMAIN = 'https://mangapro.top'
 const headers = {
