@@ -9,7 +9,7 @@
     "serve": "paperback serve",
     "eslint": "eslint src",
     "predeploy": "paperback bundle",
-    "deploy": "gh-pages -D bundles"
+    "deploy": "gh-pages -d bundles"
   },
   "repository": {
     "type": "git",
