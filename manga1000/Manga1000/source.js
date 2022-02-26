@@ -390,7 +390,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Manga1000 = exports.Manga1000Info = exports.M1000_DOMAIN = void 0;
 /* eslint-disable linebreak-style */
 const paperback_extensions_common_1 = require("paperback-extensions-common");
-const Manga1000Parser_1 = require("../Manga1000Parser");
+const Manga1000Parser_1 = require("./Manga1000Parser");
 exports.M1000_DOMAIN = 'https://mangapro.top';
 const headers = {
     'content-type': 'application/x-www-form-urlencoded',
@@ -496,7 +496,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
 }
 exports.Manga1000 = Manga1000;
 
-},{"../Manga1000Parser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
+},{"./Manga1000Parser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
