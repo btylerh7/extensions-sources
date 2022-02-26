@@ -6,7 +6,7 @@ import {
   Manga,
   MangaStatus,
   MangaTile,
-  // PagedResults,
+  //PagedResults,
   // SearchRequest,
   // TagSection,
 } from 'paperback-extensions-common'
