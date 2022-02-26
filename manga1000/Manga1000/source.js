@@ -465,7 +465,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
     getChapterDetails(mangaId, chapterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: encodeURI(`${exports.M1000_DOMAIN}/${mangaId}`),
+                url: encodeURI(`${exports.M1000_DOMAIN}/${chapterId}`),
                 method,
                 headers,
             });
