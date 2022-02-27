@@ -434,10 +434,9 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             method,
         });
     }
-    // getMangaShareUrl(mangaId: string): string {
-    //   const mangaIdUrl = encodeURI(decodeHTML(mangaId))
-    //   return `${M1000_DOMAIN}/${mangaIdUrl}/`
-    // }
+    getMangaShareUrl(mangaId) {
+        return `${exports.M1000_DOMAIN}/${mangaId}/`;
+    }
     getMangaDetails(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
@@ -494,13 +493,25 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             });
         });
     }
+    getHomePageSections(sectionCallback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const homeRequest = createRequestObject({
+                url: exports.M1000_DOMAIN,
+                method: 'GET',
+                cookies: this.cookies,
+            });
+            let response = yield this.requestManager.schedule(homeRequest, 1);
+            let $ = this.cheerio.load(response.data);
+            (0, Manga1000Parser_1.parseHomeSections)($, sectionCallback);
+        });
+    }
 }
 exports.Manga1000 = Manga1000;
 
 },{"./Manga1000Parser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
+exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     const titles = [mangaId.split(' ')[0]];
@@ -574,13 +585,32 @@ const parseSearchRequest = ($) => {
     return tiles;
 };
 exports.parseSearchRequest = parseSearchRequest;
-// export const parseHomeSections = (
-//   $: CheerioStatic,
-//   sectionCallback: (section: HomeSection) => void
-// ): void => {
-//   const topMangaSection = createHomeSection({ id: 'top_manga', title: 'Top Manga Updates', view_more: false,})
-//   const latestManga: MangaTile[] = []
-// }
+const parseHomeSections = ($, sectionCallback) => {
+    var _a, _b;
+    const latestMangaSection = createHomeSection({
+        id: 'top_manga',
+        title: 'Top Manga Updates',
+        view_more: false,
+    });
+    const latestManga = [];
+    const results = $('center').find('article');
+    for (let article of results.toArray()) {
+        // const id = article.attribs.class[0].split('-')[1]
+        const mangaId = decodeURI($('.featured-thumb', article).find('a').attr('href')).split('/')[1];
+        const image = (_b = (_a = $(article).find('img')) === null || _a === void 0 ? void 0 : _a.first().attr('src')) !== null && _b !== void 0 ? _b : '';
+        const title = $(article).find('.entry-title > a').text();
+        latestManga.push(createMangaTile({
+            id: mangaId,
+            image: image,
+            title: createIconText({
+                text: title,
+            }),
+        }));
+    }
+    latestMangaSection.items = latestManga;
+    sectionCallback(latestMangaSection);
+};
+exports.parseHomeSections = parseHomeSections;
 
 },{"paperback-extensions-common":5}]},{},[48])(48)
 });
