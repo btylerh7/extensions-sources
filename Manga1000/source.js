@@ -495,15 +495,54 @@ class Manga1000 extends paperback_extensions_common_1.Source {
     }
     getHomePageSections(sectionCallback) {
         return __awaiter(this, void 0, void 0, function* () {
-            const homeRequest = createRequestObject({
-                url: exports.M1000_DOMAIN,
-                method: 'GET',
-                cookies: this.cookies,
-            });
-            let response = yield this.requestManager.schedule(homeRequest, 1);
-            let $ = this.cheerio.load(response.data);
-            (0, Manga1000Parser_1.parseHomeSections)($, sectionCallback);
+            const sections = [
+                {
+                    request: createRequestObject({
+                        url: exports.M1000_DOMAIN,
+                        method,
+                        cookies: this.cookies,
+                    }),
+                    section: createHomeSection({
+                        id: 'latest',
+                        title: 'Latest Manga',
+                        view_more: false,
+                    }),
+                },
+                {
+                    request: createRequestObject({
+                        url: `${exports.M1000_DOMAIN}/seachlist`,
+                        method,
+                        cookies: this.cookies,
+                    }),
+                    section: createHomeSection({
+                        id: 'top',
+                        title: 'Top Manga',
+                        view_more: false,
+                    }),
+                },
+            ];
+            // const promises: Promise<void>[] = []
+            for (const section of sections) {
+                // Load empty sections
+                sectionCallback(section.section);
+            }
+            for (const section of sections) {
+                // Populate data in sections
+                let response = yield this.requestManager.schedule(section.request, 1);
+                let $ = this.cheerio.load(response.data);
+                // this.cloudflareError(response.status);
+                section.section.items = (0, Manga1000Parser_1.parseHomeSections)($);
+                sectionCallback(section.section);
+            }
+            // Make sure the function completes
+            // await Promise.all(promises)
         });
+    }
+    globalRequestHeaders() {
+        return {
+            referer: `${exports.M1000_DOMAIN}/`,
+            accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        };
     }
 }
 exports.Manga1000 = Manga1000;
@@ -585,21 +624,16 @@ const parseSearchRequest = ($) => {
     return tiles;
 };
 exports.parseSearchRequest = parseSearchRequest;
-const parseHomeSections = ($, sectionCallback) => {
+const parseHomeSections = ($) => {
     var _a, _b;
-    const latestMangaSection = createHomeSection({
-        id: 'top_manga',
-        title: 'Top Manga Updates',
-        view_more: false,
-    });
-    const latestManga = [];
+    const manga = [];
     const results = $('center').find('article');
     for (let article of results.toArray()) {
         // const id = article.attribs.class[0].split('-')[1]
         const mangaId = decodeURI($('.featured-thumb', article).find('a').attr('href')).split('/')[1];
         const image = (_b = (_a = $(article).find('img')) === null || _a === void 0 ? void 0 : _a.first().attr('src')) !== null && _b !== void 0 ? _b : '';
         const title = $(article).find('.entry-title > a').text();
-        latestManga.push(createMangaTile({
+        manga.push(createMangaTile({
             id: mangaId,
             image: image,
             title: createIconText({
@@ -607,8 +641,7 @@ const parseHomeSections = ($, sectionCallback) => {
             }),
         }));
     }
-    latestMangaSection.items = latestManga;
-    sectionCallback(latestMangaSection);
+    return manga;
 };
 exports.parseHomeSections = parseHomeSections;
 
