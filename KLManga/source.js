@@ -482,7 +482,7 @@ class KLManga extends paperback_extensions_common_1.Source {
     getSearchResults(query, metadata) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            let page = (_a = metadata.page) !== null && _a !== void 0 ? _a : 1;
+            let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
             const request = createRequestObject({
                 url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html?listType=pagination&page=${page}?name=${query}`),
                 method,
