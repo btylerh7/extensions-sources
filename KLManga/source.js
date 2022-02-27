@@ -395,7 +395,6 @@ exports.KLM_DOMAIN = 'https://klmag.net';
 const headers = {
     'content-type': 'application/x-www-form-urlencoded',
     Referer: 'https://klmag.net/',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
 };
 const method = 'GET';
 exports.KLMangaInfo = {
@@ -426,7 +425,7 @@ class KLManga extends paperback_extensions_common_1.Source {
         ];
         this.requestManager = createRequestManager({
             requestsPerSecond: 4,
-            requestTimeout: 20000,
+            requestTimeout: 40000,
         });
     }
     getCloudflareBypassRequest() {
@@ -439,17 +438,6 @@ class KLManga extends paperback_extensions_common_1.Source {
     //   override getMangaShareUrl(mangaId: string): string {
     //     return `${KLM_DOMAIN}/${mangaId}/`
     //   }
-    //   fetch("https://h4.klimv1.xyz/images2/20210903/6131f75a99389_6131f75af070c.jpg", {
-    //     "headers": {
-    //       "sec-ch-ua": "\"Chromium\";v=\"98\", \" Not A;Brand\";v=\"99\"",
-    //       "sec-ch-ua-mobile": "?0",
-    //       "sec-ch-ua-platform": "\"macOS\"",
-    //       "Referer": "https://klmag.net/",
-    //       "Referrer-Policy": "strict-origin-when-cross-origin"
-    //     },
-    //     "body": null,
-    //     "method": "GET"
-    //   });
     getMangaDetails(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
@@ -492,15 +480,9 @@ class KLManga extends paperback_extensions_common_1.Source {
         });
     }
     getSearchResults(query, metadata) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            let page;
-            if (typeof metadata === 'object' && metadata.page) {
-                page = metadata.page;
-            }
-            else {
-                // If there is no current page, this must mean this is the first page.
-                page = 1;
-            }
+            let page = (_a = metadata.page) !== null && _a !== void 0 ? _a : 1;
             const request = createRequestObject({
                 url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html?listType=pagination&page=${page}?name=${query}`),
                 method,
