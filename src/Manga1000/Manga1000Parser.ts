@@ -82,7 +82,7 @@ export const parseSearchRequest = ($: CheerioStatic) => {
     // const id = article.attribs.class[0].split('-')[1]
     const mangaId = decodeURI(
       $('.featured-thumb', article).find('a')!.attr('href')!
-    ).split('/')[1]!
+    )
     const image = $(article).find('img')?.first().attr('src') ?? ''
     const title = $(article).find('.entry-title > a').text()
 

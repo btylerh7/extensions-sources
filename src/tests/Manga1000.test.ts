@@ -84,6 +84,7 @@ describe('Manga1000 Tests', () => {
     const homePages = await wrapper.getHomePageSections(source)
     expect(homePages, 'No response from server').to.exist
     expect(homePages[0]?.items, 'No items present').to.exist
+    console.log(homePages![0]!.items)
   })
 
   // it('Testing Notifications', async () => {
