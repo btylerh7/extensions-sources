@@ -503,13 +503,13 @@ exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     const titles = [mangaId.split(' ')[0]];
-    const image = $('.wp-block-image').find('img').attr('src');
+    const image = $('.wp-block-image').find('img')[0].attribs.src;
     const status = paperback_extensions_common_1.MangaStatus.ONGOING; //Manga1000 does not provide this info
     const author = $('.entry-content').find('p').text().split(' ')[1];
     return createManga({
         id: mangaId,
         titles: titles,
-        image: image ? image : 'https://i.imgur.com/GYUxEX8.png',
+        image: image !== null && image !== void 0 ? image : 'https://i.imgur.com/GYUxEX8.png',
         rating: 0,
         status: status,
         author: author,
