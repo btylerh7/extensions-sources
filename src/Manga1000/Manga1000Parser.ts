@@ -1,7 +1,7 @@
 import {
   Chapter,
   ChapterDetails,
-  HomeSection,
+  // HomeSection,
   LanguageCode,
   Manga,
   MangaStatus,
@@ -99,17 +99,8 @@ export const parseSearchRequest = ($: CheerioStatic) => {
   return tiles
 }
 
-export const parseHomeSections = (
-  $: CheerioStatic,
-  sectionCallback: (section: HomeSection) => void
-): void => {
-  const latestMangaSection = createHomeSection({
-    id: 'top_manga',
-    title: 'Top Manga Updates',
-    view_more: false,
-  })
-
-  const latestManga: MangaTile[] = []
+export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
+  const manga: MangaTile[] = []
   const results = $('center').find('article')
 
   for (let article of results.toArray()) {
@@ -120,7 +111,7 @@ export const parseHomeSections = (
     const image = $(article).find('img')?.first().attr('src') ?? ''
     const title = $(article).find('.entry-title > a').text()
 
-    latestManga.push(
+    manga.push(
       createMangaTile({
         id: mangaId,
         image: image,
@@ -130,6 +121,5 @@ export const parseHomeSections = (
       })
     )
   }
-  latestMangaSection.items = latestManga
-  sectionCallback(latestMangaSection)
+  return manga
 }

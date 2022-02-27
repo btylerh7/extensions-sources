@@ -9,6 +9,7 @@ import {
   // MangaUpdates,
   PagedResults,
   SearchRequest,
+  // Section,
   Source,
   // TagSection,
   // Request,
@@ -130,14 +131,37 @@ export class Manga1000 extends Source {
   override async getHomePageSections(
     sectionCallback: (section: HomeSection) => void
   ): Promise<void> {
-    const homeRequest = createRequestObject({
-      url: M1000_DOMAIN,
-      method: 'GET',
-      cookies: this.cookies,
-    })
+    const sections = [
+      {
+        sectionId: createHomeSection({
+          id: 'latestManga',
+          title: 'Latest Manga Updates',
+          view_more: false,
+        }),
+        url: M1000_DOMAIN,
+      },
+      {
+        sectionId: createHomeSection({
+          id: 'top-manga',
+          title: 'Top Manga',
+          view_more: false,
+        }),
+        url: `${M1000_DOMAIN}/searchlist/`,
+        selector: "('center').find('article')",
+      },
+    ]
 
-    let response = await this.requestManager.schedule(homeRequest, 1)
-    let $ = this.cheerio.load(response.data)
-    parseHomeSections($, sectionCallback)
+    for (let section of sections) {
+      const request = createRequestObject({
+        url: section.url,
+        method: 'GET',
+        cookies: this.cookies,
+      })
+
+      let response = await this.requestManager.schedule(request, 1)
+      let $ = this.cheerio.load(response.data)
+      section.sectionId.items = parseHomeSections($)
+      sectionCallback(section.sectionId)
+    }
   }
 }
