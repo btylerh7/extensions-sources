@@ -27,7 +27,6 @@ export const KLM_DOMAIN = 'https://klmag.net'
 const headers = {
   'content-type': 'application/x-www-form-urlencoded',
   Referer: 'https://klmag.net/',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
 }
 const method = 'GET'
 
@@ -65,23 +64,11 @@ export class KLManga extends Source {
   }
   requestManager = createRequestManager({
     requestsPerSecond: 4,
-    requestTimeout: 20000,
+    requestTimeout: 40000,
   })
   //   override getMangaShareUrl(mangaId: string): string {
   //     return `${KLM_DOMAIN}/${mangaId}/`
   //   }
-
-  //   fetch("https://h4.klimv1.xyz/images2/20210903/6131f75a99389_6131f75af070c.jpg", {
-  //     "headers": {
-  //       "sec-ch-ua": "\"Chromium\";v=\"98\", \" Not A;Brand\";v=\"99\"",
-  //       "sec-ch-ua-mobile": "?0",
-  //       "sec-ch-ua-platform": "\"macOS\"",
-  //       "Referer": "https://klmag.net/",
-  //       "Referrer-Policy": "strict-origin-when-cross-origin"
-  //     },
-  //     "body": null,
-  //     "method": "GET"
-  //   });
 
   async getMangaDetails(mangaId: string): Promise<Manga> {
     const request = createRequestObject({
@@ -90,7 +77,8 @@ export class KLManga extends Source {
       headers,
       cookies: this.cookies,
     })
-    const data = await this.requestManager.schedule(request, 3)
+    this.getCloudflareBypassRequest()
+    const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
 
     return parseMangaDetails($, mangaId)
@@ -127,14 +115,7 @@ export class KLManga extends Source {
     query: SearchRequest,
     metadata: any
   ): Promise<PagedResults> {
-    let page
-    if (typeof metadata === 'object' && metadata.page) {
-      page = metadata.page
-    } else {
-      // If there is no current page, this must mean this is the first page.
-      page = 1
-    }
-
+    let page = metadata.page ?? 1
     const request = createRequestObject({
       url: encodeURI(
         `${KLM_DOMAIN}/manga-list.html?listType=pagination&page=${page}?name=${query}`

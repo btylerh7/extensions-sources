@@ -14,10 +14,10 @@ import {
 
 export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   //   const image = $('.thumbnail').attr('src')
-  const image = $('.hide').find('img').attr('src')
-  const ul = $('.manga-info')
+  const image = $('img').first().attr('src')
+  // const ul = $('.manga-info')
   const titles: string[] = []
-  const title = $('h3', ul).text().trim()
+  const title = $('title')!.text()!.split(' - ')![0]!
   titles.push(title)
 
   const rating = 0
