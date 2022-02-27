@@ -559,7 +559,7 @@ const parseSearchRequest = ($) => {
     const results = $('.inner-wrapper').find('article');
     for (let article of results.toArray()) {
         // const id = article.attribs.class[0].split('-')[1]
-        const mangaId = decodeURI($('.featured-thumb', article).find('a').attr('href')); //Fix to be manga id and not chapter id
+        const mangaId = decodeURI($('.featured-thumb', article).find('a').attr('href')).split('/')[1];
         const image = (_b = (_a = $(article).find('img')) === null || _a === void 0 ? void 0 : _a.first().attr('src')) !== null && _b !== void 0 ? _b : '';
         const title = $(article).find('.entry-title > a').text();
         tiles.push(createMangaTile({
