@@ -24,6 +24,7 @@ describe('Manga1000 Tests', () => {
 
     // Validate that the fields are filled
     const data = details
+    console.log(data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty

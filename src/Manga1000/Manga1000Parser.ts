@@ -14,7 +14,7 @@ import {
 
 export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   const titles: string[] = [mangaId!.split(' ')[0]!]
-  const image = $('.wp-image-163').attr('src')
+  const image = $('.wp-block-image').find('img').attr('src')
   const status = MangaStatus.ONGOING //Manga1000 does not provide this info
   const author = $('.entry-content').find('p').text().split(' ')[1]
 
