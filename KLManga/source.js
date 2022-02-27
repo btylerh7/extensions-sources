@@ -394,6 +394,8 @@ const KLMangaParser_1 = require("./KLMangaParser");
 exports.KLM_DOMAIN = 'https://klmag.net';
 const headers = {
     'content-type': 'application/x-www-form-urlencoded',
+    Referer: 'https://klmag.net/',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
 };
 const method = 'GET';
 exports.KLMangaInfo = {
@@ -434,19 +436,29 @@ class KLManga extends paperback_extensions_common_1.Source {
             headers,
         });
     }
-    getMangaShareUrl(mangaId) {
-        return `${exports.KLM_DOMAIN}/${mangaId}/`;
-    }
+    //   override getMangaShareUrl(mangaId: string): string {
+    //     return `${KLM_DOMAIN}/${mangaId}/`
+    //   }
+    //   fetch("https://h4.klimv1.xyz/images2/20210903/6131f75a99389_6131f75af070c.jpg", {
+    //     "headers": {
+    //       "sec-ch-ua": "\"Chromium\";v=\"98\", \" Not A;Brand\";v=\"99\"",
+    //       "sec-ch-ua-mobile": "?0",
+    //       "sec-ch-ua-platform": "\"macOS\"",
+    //       "Referer": "https://klmag.net/",
+    //       "Referrer-Policy": "strict-origin-when-cross-origin"
+    //     },
+    //     "body": null,
+    //     "method": "GET"
+    //   });
     getMangaDetails(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: `${exports.KLM_DOMAIN}/`,
+                url: encodeURI(`${exports.KLM_DOMAIN}/${mangaId}?PageSpeed=0`),
                 method,
                 headers,
-                param: mangaId,
                 cookies: this.cookies,
             });
-            const data = yield this.requestManager.schedule(request, 1);
+            const data = yield this.requestManager.schedule(request, 3);
             let $ = this.cheerio.load(data.data);
             return (0, KLMangaParser_1.parseMangaDetails)($, mangaId);
         });
@@ -461,7 +473,8 @@ class KLManga extends paperback_extensions_common_1.Source {
             });
             const data = yield this.requestManager.schedule(request, 1);
             let $ = yield this.cheerio.load(data.data);
-            return (0, KLMangaParser_1.parseChapters)($, mangaId);
+            const chapterList = (0, KLMangaParser_1.parseChapters)($, mangaId);
+            return chapterList;
         });
     }
     getChapterDetails(mangaId, chapterId) {
@@ -519,23 +532,23 @@ const parseMangaDetails = ($, mangaId) => {
     const title = $('h3', ul).text().trim();
     titles.push(title);
     const rating = 0;
-    const statusLink = $('.btn-success').attr('href');
-    console.log(statusLink);
+    const statusLink = $('btn.btn-xs.btn-success').attr('href');
     let status;
-    switch (statusLink) {
-        case '/manga-incomplete.html':
-            status = paperback_extensions_common_1.MangaStatus.ONGOING;
-            break;
-        case '/manga-completed.html':
-            status = paperback_extensions_common_1.MangaStatus.COMPLETED;
-            break;
+    if (statusLink) {
+        status =
+            statusLink === '/manga-incomplete.html'
+                ? paperback_extensions_common_1.MangaStatus.ONGOING
+                : paperback_extensions_common_1.MangaStatus.COMPLETED;
+    }
+    else {
+        status = paperback_extensions_common_1.MangaStatus.UNKNOWN;
     }
     const desc = $('.row > h3').find('p').text();
     return createManga({
         id: mangaId,
         titles: titles,
         image: image !== null && image !== void 0 ? image : 'https://i.imgur.com/GYUxEX8.png',
-        status: status,
+        status,
         desc,
         rating,
     });

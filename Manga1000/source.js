@@ -428,7 +428,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             requestTimeout: 15000,
         });
     }
-    cloudflareBypassRequest() {
+    getCloudflareBypassRequest() {
         return createRequestObject({
             url: `${exports.M1000_DOMAIN}`,
             method,
@@ -479,7 +479,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
         return __awaiter(this, void 0, void 0, function* () {
             let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
             const request = createRequestObject({
-                url: encodeURI(`${exports.M1000_DOMAIN}/?s=${query}`),
+                url: encodeURI(`${exports.M1000_DOMAIN}/?s=${query.title}`),
                 method,
                 headers,
             });
