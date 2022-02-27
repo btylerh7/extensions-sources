@@ -458,7 +458,8 @@ class KLManga extends paperback_extensions_common_1.Source {
                 headers,
                 cookies: this.cookies,
             });
-            const data = yield this.requestManager.schedule(request, 3);
+            this.getCloudflareBypassRequest();
+            const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
             return (0, KLMangaParser_1.parseMangaDetails)($, mangaId);
         });
@@ -526,10 +527,10 @@ exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     //   const image = $('.thumbnail').attr('src')
-    const image = $('.hide').find('img').attr('src');
-    const ul = $('.manga-info');
+    const image = $('img').first().attr('src');
+    // const ul = $('.manga-info')
     const titles = [];
-    const title = $('h3', ul).text().trim();
+    const title = $('title').text().split(' - ')[0];
     titles.push(title);
     const rating = 0;
     const statusLink = $('btn.btn-xs.btn-success').attr('href');
