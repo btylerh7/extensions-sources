@@ -69,7 +69,7 @@ describe('Manga1000 Tests', () => {
 
     const search = await wrapper.searchRequest(source, testSearch, 1)
     const result = search.results[0]
-    console.log(result)
+    console.log(search.results[4])
 
     expect(result, 'No response from server').to.exist
 

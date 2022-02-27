@@ -81,7 +81,9 @@ export const parseSearchRequest = ($: CheerioStatic) => {
 
   for (let article of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
-    const mangaId = decodeURI($(article).find('.entry-title > a').text()) //Fix to be manga id and not chapter id
+    const mangaId = decodeURI(
+      $('.featured-thumb', article).find('a')!.attr('href')!
+    ).split('/')[1]!
     const image = $(article).find('img')?.first().attr('src') ?? ''
     const title = $(article).find('.entry-title > a').text()
 
