@@ -53,6 +53,7 @@ describe('KLManga Tests', () => {
       mangaId,
       chapters[0]?.id ?? 'unknown'
     )
+    console.log('data', data)
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
 
@@ -63,7 +64,7 @@ describe('KLManga Tests', () => {
 
   it('Testing search', async () => {
     const testSearch: SearchRequest = {
-      //title: 'Solo',
+      //   title: 'Solo',
       parameters: {
         includedTags: ['action'],
       },

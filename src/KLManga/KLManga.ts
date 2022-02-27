@@ -26,6 +26,8 @@ import {
 export const KLM_DOMAIN = 'https://klmag.net'
 const headers = {
   'content-type': 'application/x-www-form-urlencoded',
+  Referer: 'https://klmag.net/',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
 }
 const method = 'GET'
 
@@ -65,18 +67,30 @@ export class KLManga extends Source {
     requestsPerSecond: 4,
     requestTimeout: 20000,
   })
-  override getMangaShareUrl(mangaId: string): string {
-    return `${KLM_DOMAIN}/${mangaId}/`
-  }
+  //   override getMangaShareUrl(mangaId: string): string {
+  //     return `${KLM_DOMAIN}/${mangaId}/`
+  //   }
+
+  //   fetch("https://h4.klimv1.xyz/images2/20210903/6131f75a99389_6131f75af070c.jpg", {
+  //     "headers": {
+  //       "sec-ch-ua": "\"Chromium\";v=\"98\", \" Not A;Brand\";v=\"99\"",
+  //       "sec-ch-ua-mobile": "?0",
+  //       "sec-ch-ua-platform": "\"macOS\"",
+  //       "Referer": "https://klmag.net/",
+  //       "Referrer-Policy": "strict-origin-when-cross-origin"
+  //     },
+  //     "body": null,
+  //     "method": "GET"
+  //   });
+
   async getMangaDetails(mangaId: string): Promise<Manga> {
     const request = createRequestObject({
-      url: `${KLM_DOMAIN}/`,
+      url: encodeURI(`${KLM_DOMAIN}/${mangaId}?PageSpeed=0`),
       method,
       headers,
-      param: mangaId,
       cookies: this.cookies,
     })
-    const data = await this.requestManager.schedule(request, 1)
+    const data = await this.requestManager.schedule(request, 3)
     let $ = this.cheerio.load(data.data)
 
     return parseMangaDetails($, mangaId)
@@ -91,7 +105,8 @@ export class KLManga extends Source {
     const data = await this.requestManager.schedule(request, 1)
     let $ = await this.cheerio.load(data.data)
 
-    return parseChapters($, mangaId)
+    const chapterList = parseChapters($, mangaId)
+    return chapterList
   }
   async getChapterDetails(
     mangaId: string,

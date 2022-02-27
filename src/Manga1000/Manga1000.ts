@@ -55,7 +55,7 @@ export class Manga1000 extends Source {
       domain: `https://manga1000.top`,
     }),
   ]
-  cloudflareBypassRequest() {
+  override getCloudflareBypassRequest() {
     return createRequestObject({
       url: `${M1000_DOMAIN}`,
       method,
@@ -112,7 +112,7 @@ export class Manga1000 extends Source {
     let page: number = metadata?.page ?? 1
 
     const request = createRequestObject({
-      url: encodeURI(`${M1000_DOMAIN}/?s=${query}`),
+      url: encodeURI(`${M1000_DOMAIN}/?s=${query.title}`),
       method,
       headers,
     })

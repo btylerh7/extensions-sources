@@ -61,9 +61,9 @@ describe('Manga1000 Tests', () => {
 
   it('Testing search', async () => {
     const testSearch: SearchRequest = {
-      //title: 'Solo',
+      title: '彼女',
       parameters: {
-        includedTags: ['action'],
+        includedTags: [],
       },
     }
 

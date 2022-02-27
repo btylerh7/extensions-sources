@@ -21,16 +21,15 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   titles.push(title)
 
   const rating = 0
-  const statusLink = $('.btn-success').attr('href')
-  console.log(statusLink)
+  const statusLink = $('btn.btn-xs.btn-success').attr('href')
   let status: MangaStatus
-  switch (statusLink!) {
-    case '/manga-incomplete.html':
-      status = MangaStatus.ONGOING
-      break
-    case '/manga-completed.html':
-      status = MangaStatus.COMPLETED
-      break
+  if (statusLink) {
+    status =
+      statusLink === '/manga-incomplete.html'
+        ? MangaStatus.ONGOING
+        : MangaStatus.COMPLETED
+  } else {
+    status = MangaStatus.UNKNOWN
   }
   const desc = $('.row > h3').find('p').text()
 
@@ -38,7 +37,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     id: mangaId,
     titles: titles,
     image: image ?? 'https://i.imgur.com/GYUxEX8.png',
-    status: status!,
+    status,
     desc,
     rating,
   })
