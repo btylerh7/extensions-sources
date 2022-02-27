@@ -3,7 +3,7 @@ import {
   Chapter,
   ChapterDetails,
   ContentRating,
-  // HomeSection,
+  HomeSection,
   // LanguageCode,
   Manga,
   // MangaUpdates,
@@ -21,6 +21,7 @@ import {
   parseChapters,
   parseChapterDetails,
   parseSearchRequest,
+  parseHomeSections,
 } from './Manga1000Parser'
 
 export const M1000_DOMAIN = 'https://mangapro.top'
@@ -65,14 +66,14 @@ export class Manga1000 extends Source {
     requestsPerSecond: 4,
     requestTimeout: 15000,
   })
-  // getMangaShareUrl(mangaId: string): string {
-  //   const mangaIdUrl = encodeURI(decodeHTML(mangaId))
-  //   return `${M1000_DOMAIN}/${mangaIdUrl}/`
-  // }
+  override getMangaShareUrl(mangaId: string): string {
+    return `${M1000_DOMAIN}/${mangaId}/`
+  }
   async getMangaDetails(mangaId: string): Promise<Manga> {
     const request = createRequestObject({
       url: encodeURI(`${M1000_DOMAIN}/${mangaId}`),
       method,
+      headers,
       cookies: this.cookies,
     })
     const data = await this.requestManager.schedule(request, 1)
@@ -125,5 +126,18 @@ export class Manga1000 extends Source {
       results: manga,
       metadata,
     })
+  }
+  override async getHomePageSections(
+    sectionCallback: (section: HomeSection) => void
+  ): Promise<void> {
+    const homeRequest = createRequestObject({
+      url: M1000_DOMAIN,
+      method: 'GET',
+      cookies: this.cookies,
+    })
+
+    let response = await this.requestManager.schedule(homeRequest, 1)
+    let $ = this.cheerio.load(response.data)
+    parseHomeSections($, sectionCallback)
   }
 }
