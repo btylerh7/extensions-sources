@@ -15,6 +15,7 @@ import {
   // Request,
   // Response,
   SourceInfo,
+  RequestHeaders,
   TagType,
 } from 'paperback-extensions-common'
 import {
@@ -133,35 +134,52 @@ export class Manga1000 extends Source {
   ): Promise<void> {
     const sections = [
       {
-        sectionId: createHomeSection({
-          id: 'latestManga',
-          title: 'Latest Manga Updates',
+        request: createRequestObject({
+          url: M1000_DOMAIN,
+          method,
+          cookies: this.cookies,
+        }),
+        section: createHomeSection({
+          id: 'latest',
+          title: 'Latest Manga',
           view_more: false,
         }),
-        url: M1000_DOMAIN,
       },
       {
-        sectionId: createHomeSection({
-          id: 'top-manga',
+        request: createRequestObject({
+          url: `${M1000_DOMAIN}/seachlist`,
+          method,
+          cookies: this.cookies,
+        }),
+        section: createHomeSection({
+          id: 'top',
           title: 'Top Manga',
           view_more: false,
         }),
-        url: `${M1000_DOMAIN}/searchlist/`,
-        selector: "('center').find('article')",
       },
     ]
+    // const promises: Promise<void>[] = []
+    for (const section of sections) {
+      // Load empty sections
+      sectionCallback(section.section)
+    }
 
-    for (let section of sections) {
-      const request = createRequestObject({
-        url: section.url,
-        method: 'GET',
-        cookies: this.cookies,
-      })
-
-      let response = await this.requestManager.schedule(request, 1)
+    for (const section of sections) {
+      // Populate data in sections
+      let response = await this.requestManager.schedule(section.request, 1)
       let $ = this.cheerio.load(response.data)
-      section.sectionId.items = parseHomeSections($)
-      sectionCallback(section.sectionId)
+      // this.cloudflareError(response.status);
+      section.section.items = parseHomeSections($)
+      sectionCallback(section.section)
+    }
+    // Make sure the function completes
+    // await Promise.all(promises)
+  }
+  override globalRequestHeaders(): RequestHeaders {
+    return {
+      referer: `${M1000_DOMAIN}/`,
+      accept:
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     }
   }
 }
