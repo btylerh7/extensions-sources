@@ -443,6 +443,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: encodeURI(`${exports.M1000_DOMAIN}/${mangaId}`),
                 method,
+                headers,
                 cookies: this.cookies,
             });
             const data = yield this.requestManager.schedule(request, 1);
@@ -503,7 +504,7 @@ exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     const titles = [mangaId.split(' ')[0]];
-    const image = $('.wp-block-image').find('img')[0].attribs.src;
+    const image = $('.aligncenter').find('img').attr('src');
     const status = paperback_extensions_common_1.MangaStatus.ONGOING; //Manga1000 does not provide this info
     const author = $('.entry-content').find('p').text().split(' ')[1];
     return createManga({
