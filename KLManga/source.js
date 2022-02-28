@@ -489,7 +489,7 @@ class KLManga extends paperback_extensions_common_1.Source {
                 page = 1;
             }
             const request = createRequestObject({
-                url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html${page > 1 && `?listType=pagination&page=${page}`}?name=${query}`),
+                url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html${page > 1 && `?listType=pagination&page=${page}`}?name=${query.title}`),
                 method,
                 headers,
                 cookies: this.cookies,
