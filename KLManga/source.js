@@ -441,7 +441,7 @@ class KLManga extends paperback_extensions_common_1.Source {
     getMangaDetails(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: encodeURI(`${exports.KLM_DOMAIN}/${mangaId}?PageSpeed=0`),
+                url: `${exports.KLM_DOMAIN}/${mangaId}?PageSpeed=0`,
                 method,
                 headers,
                 cookies: this.cookies,
