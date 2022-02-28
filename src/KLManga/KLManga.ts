@@ -72,7 +72,7 @@ export class KLManga extends Source {
 
   async getMangaDetails(mangaId: string): Promise<Manga> {
     const request = createRequestObject({
-      url: encodeURI(`${KLM_DOMAIN}/${mangaId}?PageSpeed=0`),
+      url: `${KLM_DOMAIN}/${mangaId}?PageSpeed=0`,
       method,
       headers,
       cookies: this.cookies,
@@ -91,7 +91,7 @@ export class KLManga extends Source {
       cookies: this.cookies,
     })
     const data = await this.requestManager.schedule(request, 1)
-    let $ = await this.cheerio.load(data.data)
+    let $ = this.cheerio.load(data.data)
 
     const chapterList = parseChapters($, mangaId)
     return chapterList
@@ -115,10 +115,17 @@ export class KLManga extends Source {
     query: SearchRequest,
     metadata: any
   ): Promise<PagedResults> {
-    let page = metadata.page ?? 1
+    let page
+    if (metadata && metadata.page) {
+      page = metadata.page
+    } else {
+      page = 1
+    }
     const request = createRequestObject({
       url: encodeURI(
-        `${KLM_DOMAIN}/manga-list.html?listType=pagination&page=${page}?name=${query}`
+        `${KLM_DOMAIN}/manga-list.html${
+          page > 1 && `?listType=pagination&page=${page}`
+        }?name=${query.title}`
       ),
       method,
       headers,

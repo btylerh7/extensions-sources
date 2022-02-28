@@ -64,7 +64,7 @@ describe('KLManga Tests', () => {
 
   it('Testing search', async () => {
     const testSearch: SearchRequest = {
-      //   title: 'Solo',
+      title: 'Solo',
       parameters: {
         includedTags: ['action'],
       },

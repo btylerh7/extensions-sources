@@ -44,8 +44,8 @@ describe('Manga1000 Tests', () => {
 
   it('Get Chapter Details', async () => {
     const chapters = await wrapper.getChapters(source, mangaId)
-    const chapter = chapters[0]
-    console.log(chapter)
+    //      const chapter = chapters[0]
+    //        console.log(chapter)
 
     const data = await wrapper.getChapterDetails(
       source,
