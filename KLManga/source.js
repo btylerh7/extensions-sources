@@ -461,7 +461,7 @@ class KLManga extends paperback_extensions_common_1.Source {
                 cookies: this.cookies,
             });
             const data = yield this.requestManager.schedule(request, 1);
-            let $ = yield this.cheerio.load(data.data);
+            let $ = this.cheerio.load(data.data);
             const chapterList = (0, KLMangaParser_1.parseChapters)($, mangaId);
             return chapterList;
         });
@@ -489,7 +489,7 @@ class KLManga extends paperback_extensions_common_1.Source {
                 page = 1;
             }
             const request = createRequestObject({
-                url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html?listType=pagination&page=${page}?name=${query}`),
+                url: encodeURI(`${exports.KLM_DOMAIN}/manga-list.html${page > 1 && `?listType=pagination&page=${page}`}?name=${query}`),
                 method,
                 headers,
                 cookies: this.cookies,
@@ -515,18 +515,15 @@ const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     //   const image = $('.thumbnail').attr('src')
     const image = $('img').first().attr('src');
-    // const ul = $('.manga-info')
     const titles = [];
     const title = $('title').text().split(' - ')[0];
     titles.push(title);
     const rating = 0;
-    const statusLink = $('btn.btn-xs.btn-success').attr('href');
+    const statusText = $('btn.btn-xs.btn-success').text();
     let status;
-    if (statusLink) {
+    if (statusText) {
         status =
-            statusLink === '/manga-incomplete.html'
-                ? paperback_extensions_common_1.MangaStatus.ONGOING
-                : paperback_extensions_common_1.MangaStatus.COMPLETED;
+            statusText === 'Incomplete' ? paperback_extensions_common_1.MangaStatus.ONGOING : paperback_extensions_common_1.MangaStatus.COMPLETED;
     }
     else {
         status = paperback_extensions_common_1.MangaStatus.UNKNOWN;
@@ -544,10 +541,10 @@ const parseMangaDetails = ($, mangaId) => {
 exports.parseMangaDetails = parseMangaDetails;
 const parseChapters = ($, mangaId) => {
     const chapters = [];
-    const chapterLinks = $('td').find('a');
-    for (let chapter of chapterLinks.toArray()) {
+    const chapterTable = $('tbody').find('tr > td > a');
+    for (let chapter of chapterTable.toArray()) {
         const id = decodeURI(chapter.attribs.href); //Decode link to chapter
-        const chapNum = chapter.attribs.text.split('Chapter ')[1];
+        const chapNum = chapter.attribs.text.split(' ')[1];
         chapters.push(createChapter({
             id,
             mangaId,
