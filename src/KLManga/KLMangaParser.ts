@@ -7,8 +7,6 @@ import {
   Manga,
   MangaStatus,
   MangaTile,
-  Tag,
-  TagSection,
   //PagedResults,
   // SearchRequest,
   // TagSection,
@@ -94,6 +92,28 @@ export const parseSearchRequest = ($: CheerioStatic) => {
     const mangaId = $('.thumb-wrapper > a', result).attr('href')
     const image = $('.img-in-ratio', result).attr('data-bg')
     const title = $('.title-thumb', result).text()
+
+    tiles.push(
+      createMangaTile({
+        id: mangaId!,
+        image: image ?? 'https://i.imgur.com/GYUxEX8.png',
+        title: createIconText({
+          text: title,
+        }),
+      })
+    )
+  }
+  return tiles
+}
+
+export const parseHomeSections = ($: CheerioStatic) => {
+  const tiles: MangaTile[] = []
+  const results = $('.bodythumb').find('.thumb-item-flow.col-6.col-md-3')
+
+  for (let result of results.toArray()) {
+    const mangaId = $(result).find('a').first().attr('href')
+    const image = $(result).find('.img-in-ratio.lazyloaded').attr('data-bg')
+    const title = $(result).find('.title-thumb').text()
 
     tiles.push(
       createMangaTile({

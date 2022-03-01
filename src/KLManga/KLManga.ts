@@ -3,7 +3,7 @@ import {
   Chapter,
   ChapterDetails,
   ContentRating,
-  // HomeSection,
+  HomeSection,
   //   LanguageCode,
   Manga,
   // MangaUpdates,
@@ -21,6 +21,7 @@ import {
   parseChapters,
   parseChapterDetails,
   parseSearchRequest,
+  parseHomeSections,
 } from './KLMangaParser'
 
 export const KLM_DOMAIN = 'https://klmag.net'
@@ -140,5 +141,51 @@ export class KLManga extends Source {
       results: manga,
       metadata,
     })
+  }
+  override async getHomePageSections(
+    sectionCallback: (section: HomeSection) => void
+  ): Promise<void> {
+    const sections = [
+      {
+        request: createRequestObject({
+          url: `${KLM_DOMAIN}/manga-list.html`,
+          method,
+          cookies: this.cookies,
+        }),
+        section: createHomeSection({
+          id: 'top',
+          title: 'Top Manga',
+          view_more: false,
+        }),
+      },
+      // {
+      //   request: createRequestObject({
+      //     url: `${M1000_DOMAIN}/seachlist`,
+      //     method,
+      //     cookies: this.cookies,
+      //   }),
+      //   section: createHomeSection({
+      //     id: 'top',
+      //     title: 'Top Manga',
+      //     view_more: false,
+      //   }),
+      // },
+    ]
+    // const promises: Promise<void>[] = []
+    for (const section of sections) {
+      // Load empty sections
+      sectionCallback(section.section)
+    }
+
+    for (const section of sections) {
+      // Populate data in sections
+      let response = await this.requestManager.schedule(section.request, 1)
+      let $ = this.cheerio.load(response.data)
+      // this.cloudflareError(response.status);
+      section.section.items = parseHomeSections($)
+      sectionCallback(section.section)
+    }
+    // Make sure the function completes
+    // await Promise.all(promises)
   }
 }
