@@ -478,11 +478,21 @@ class Manga1000 extends paperback_extensions_common_1.Source {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
-            const request = createRequestObject({
-                url: encodeURI(`${exports.M1000_DOMAIN}/?s=${query.title}`),
-                method,
-                headers,
-            });
+            let request;
+            if (query.includedTags) {
+                request = createRequestObject({
+                    url: encodeURI(`${exports.M1000_DOMAIN}/category/${query.includedTags}`),
+                    method,
+                    headers,
+                });
+            }
+            else {
+                request = createRequestObject({
+                    url: encodeURI(`${exports.M1000_DOMAIN}/?s=${query.title}`),
+                    method,
+                    headers,
+                });
+            }
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
             const manga = (0, Manga1000Parser_1.parseSearchRequest)($);
