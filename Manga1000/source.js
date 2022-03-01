@@ -538,7 +538,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             // await Promise.all(promises)
         });
     }
-    getTags() {
+    getSearchTags() {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
                 url: exports.M1000_DOMAIN,
@@ -578,6 +578,7 @@ const parseMangaDetails = ($, mangaId) => {
         // if (!id || !label) continue
         tags.push({ id: id, label: label });
     }
+    tags.shift();
     const tagSection = [
         createTagSection({
             id: '0',
@@ -681,6 +682,7 @@ const parseTags = ($) => {
         // if (!id || !label) continue
         tags.push({ id: id, label: label });
     }
+    tags.shift();
     const tagSection = [
         createTagSection({
             id: '0',
