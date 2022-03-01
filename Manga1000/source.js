@@ -583,7 +583,7 @@ const parseMangaDetails = ($, mangaId) => {
     const tags = [];
     const data = $('select').find('option');
     for (const option of data.toArray()) {
-        const id = encodeURI($(option).attr('value'));
+        const id = decodeURI($(option).attr('value'));
         const label = $(option).text();
         // if (!id || !label) continue
         tags.push({ id: id, label: label });
@@ -687,7 +687,7 @@ const parseTags = ($) => {
     const tags = [];
     const data = $('select').find('option');
     for (const option of data.toArray()) {
-        const id = encodeURI($(option).attr('value'));
+        const id = decodeURI($(option).attr('value'));
         const label = $(option).text();
         // if (!id || !label) continue
         tags.push({ id: id, label: label });
