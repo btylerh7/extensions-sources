@@ -475,13 +475,13 @@ class Manga1000 extends paperback_extensions_common_1.Source {
         });
     }
     getSearchResults(query, metadata) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
             let request;
             if (query.includedTags) {
                 request = createRequestObject({
-                    url: encodeURI(`${exports.M1000_DOMAIN}/category/${query.includedTags}`),
+                    url: encodeURI(`${exports.M1000_DOMAIN}/category/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
                     method,
                     headers,
                 });
