@@ -29,6 +29,7 @@ describe('Manga1000 Tests', () => {
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty
     expect(data.titles, 'Missing Titles').to.be.not.empty
+    console.log(data.tags)
   })
 
   it('Get Chapters', async () => {
@@ -70,7 +71,7 @@ describe('Manga1000 Tests', () => {
 
     const search = await wrapper.searchRequest(source, testSearch, 1)
     const result = search.results[0]
-    console.log(search.results[4])
+    // console.log(search.results[4])
 
     expect(result, 'No response from server').to.exist
 
@@ -84,10 +85,16 @@ describe('Manga1000 Tests', () => {
     const homePages = await wrapper.getHomePageSections(source)
     expect(homePages, 'No response from server').to.exist
     expect(homePages[0]?.items, 'No items present').to.exist
-    console.log('latest:', homePages![0]!.items)
-    console.log('top:', homePages![1]!.items)
+    // console.log('latest:', homePages![0]!.items)
+    // console.log('top:', homePages![1]!.items)
   })
-
+  it('Get tags', async () => {
+    const tags = await wrapper.getTags(source)
+    const taglist = tags![0]?.tags!
+    console.log(taglist)
+    expect(tags, 'No server response').to.exist
+    expect(tags, 'Empty server response').to.not.be.empty
+  })
   // it('Testing Notifications', async () => {
   //   const updates = await wrapper.filterUpdatedManga(
   //     source,
@@ -97,11 +104,5 @@ describe('Manga1000 Tests', () => {
   //   expect(updates, 'No server response').to.exist
   //   expect(updates, 'Empty server response').to.not.be.empty
   //   expect(updates[0], 'No updates').to.not.be.empty
-  // })
-
-  // it('Get tags', async () => {
-  //   const tags = await wrapper.getTags(source)
-  //   expect(tags, 'No server response').to.exist
-  //   expect(tags, 'Empty server response').to.not.be.empty
   // })
 })

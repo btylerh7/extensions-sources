@@ -8,7 +8,8 @@ import {
   MangaTile,
   //PagedResults,
   // SearchRequest,
-  // TagSection,
+  TagSection,
+  Tag,
 } from 'paperback-extensions-common'
 
 export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
@@ -16,6 +17,21 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   const image = $('.aligncenter').find('img').attr('src')
   const status = MangaStatus.ONGOING //Manga1000 does not provide this info
   const author = $('.entry-content').find('p').text().split(' ')[1]
+  const tags: Tag[] = []
+  const data = $('select').find('option')
+  for (const option of data.toArray()) {
+    const id = encodeURI($(option).attr('value')!)
+    const label = $(option).text()
+    // if (!id || !label) continue
+    tags.push({ id: id, label: label })
+  }
+  const tagSection: TagSection[] = [
+    createTagSection({
+      id: '0',
+      label: 'genres',
+      tags: tags.map((tag) => createTag(tag)),
+    }),
+  ]
 
   return createManga({
     id: mangaId,
@@ -24,7 +40,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     rating: 0,
     status: status,
     author: author,
-    // tags: tagSections,
+    tags: tagSection,
     // desc,
     // hentai
   })
@@ -122,4 +138,23 @@ export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
     )
   }
   return manga
+}
+
+export const parseTags = ($: CheerioSelector): TagSection[] => {
+  const tags: Tag[] = []
+  const data = $('select').find('option')
+  for (const option of data.toArray()) {
+    const id = encodeURI($(option).attr('value')!)
+    const label = $(option).text()
+    // if (!id || !label) continue
+    tags.push({ id: id, label: label })
+  }
+  const tagSection: TagSection[] = [
+    createTagSection({
+      id: '0',
+      label: 'genres',
+      tags: tags.map((tag) => createTag(tag)),
+    }),
+  ]
+  return tagSection
 }

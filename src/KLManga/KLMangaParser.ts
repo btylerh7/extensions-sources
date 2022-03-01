@@ -7,6 +7,8 @@ import {
   Manga,
   MangaStatus,
   MangaTile,
+  Tag,
+  TagSection,
   //PagedResults,
   // SearchRequest,
   // TagSection,

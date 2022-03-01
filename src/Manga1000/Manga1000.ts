@@ -17,6 +17,7 @@ import {
   SourceInfo,
   RequestHeaders,
   TagType,
+  // TagSection,
 } from 'paperback-extensions-common'
 import {
   parseMangaDetails,
@@ -24,6 +25,7 @@ import {
   parseChapterDetails,
   parseSearchRequest,
   parseHomeSections,
+  // parseTags,
 } from './Manga1000Parser'
 
 export const M1000_DOMAIN = 'https://mangapro.top'
@@ -175,6 +177,18 @@ export class Manga1000 extends Source {
     // Make sure the function completes
     // await Promise.all(promises)
   }
+  // override async getTags(): Promise<TagSection[]> {
+  //   const request = createRequestObject({
+  //     url: M1000_DOMAIN,
+  //     method,
+  //     headers,
+  //     cookies: this.cookies,
+  //   })
+  //   const response = await this.requestManager.schedule(request, 1)
+  //   const $ = this.cheerio.load(response.data)
+  //   return parseTags($)
+  // }
+
   override globalRequestHeaders(): RequestHeaders {
     return {
       referer: `${M1000_DOMAIN}/`,
