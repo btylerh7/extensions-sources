@@ -481,7 +481,7 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             let request;
             if (query.includedTags) {
                 request = createRequestObject({
-                    url: encodeURI(`${exports.M1000_DOMAIN}/category/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
+                    url: encodeURI(`${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
                     method,
                     headers,
                 });
