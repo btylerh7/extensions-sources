@@ -570,6 +570,21 @@ const parseMangaDetails = ($, mangaId) => {
     const image = $('.aligncenter').find('img').attr('src');
     const status = paperback_extensions_common_1.MangaStatus.ONGOING; //Manga1000 does not provide this info
     const author = $('.entry-content').find('p').text().split(' ')[1];
+    const tags = [];
+    const data = $('select').find('option');
+    for (const option of data.toArray()) {
+        const id = encodeURI($(option).attr('value'));
+        const label = $(option).text();
+        // if (!id || !label) continue
+        tags.push({ id: id, label: label });
+    }
+    const tagSection = [
+        createTagSection({
+            id: '0',
+            label: 'genres',
+            tags: tags.map((tag) => createTag(tag)),
+        }),
+    ];
     return createManga({
         id: mangaId,
         titles: titles,
@@ -577,7 +592,7 @@ const parseMangaDetails = ($, mangaId) => {
         rating: 0,
         status: status,
         author: author,
-        // tags: tagSections,
+        tags: tagSection,
         // desc,
         // hentai
     });
@@ -661,19 +676,19 @@ const parseTags = ($) => {
     const tags = [];
     const data = $('select').find('option');
     for (const option of data.toArray()) {
-        const id = encodeURI(option.attribs.value);
-        const label = option.attribs.text;
+        const id = encodeURI($(option).attr('value'));
+        const label = $(option).text();
         // if (!id || !label) continue
         tags.push({ id: id, label: label });
     }
-    const tagSections = [
+    const tagSection = [
         createTagSection({
             id: '0',
             label: 'genres',
             tags: tags.map((tag) => createTag(tag)),
         }),
     ];
-    return tagSections;
+    return tagSection;
 };
 exports.parseTags = parseTags;
 
