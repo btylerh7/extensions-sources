@@ -538,19 +538,17 @@ class Manga1000 extends paperback_extensions_common_1.Source {
             // await Promise.all(promises)
         });
     }
-    getTags() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const request = createRequestObject({
-                url: exports.M1000_DOMAIN,
-                method,
-                headers,
-                cookies: this.cookies,
-            });
-            const response = yield this.requestManager.schedule(request, 1);
-            const $ = this.cheerio.load(response.data);
-            return (0, Manga1000Parser_1.parseTags)($);
-        });
-    }
+    // override async getTags(): Promise<TagSection[]> {
+    //   const request = createRequestObject({
+    //     url: M1000_DOMAIN,
+    //     method,
+    //     headers,
+    //     cookies: this.cookies,
+    //   })
+    //   const response = await this.requestManager.schedule(request, 1)
+    //   const $ = this.cheerio.load(response.data)
+    //   return parseTags($)
+    // }
     globalRequestHeaders() {
         return {
             referer: `${exports.M1000_DOMAIN}/`,
