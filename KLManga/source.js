@@ -504,13 +504,58 @@ class KLManga extends paperback_extensions_common_1.Source {
             });
         });
     }
+    getHomePageSections(sectionCallback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sections = [
+                {
+                    request: createRequestObject({
+                        url: `${exports.KLM_DOMAIN}/manga-list.html`,
+                        method,
+                        cookies: this.cookies,
+                    }),
+                    section: createHomeSection({
+                        id: 'top',
+                        title: 'Top Manga',
+                        view_more: false,
+                    }),
+                },
+                // {
+                //   request: createRequestObject({
+                //     url: `${M1000_DOMAIN}/seachlist`,
+                //     method,
+                //     cookies: this.cookies,
+                //   }),
+                //   section: createHomeSection({
+                //     id: 'top',
+                //     title: 'Top Manga',
+                //     view_more: false,
+                //   }),
+                // },
+            ];
+            // const promises: Promise<void>[] = []
+            for (const section of sections) {
+                // Load empty sections
+                sectionCallback(section.section);
+            }
+            for (const section of sections) {
+                // Populate data in sections
+                let response = yield this.requestManager.schedule(section.request, 1);
+                let $ = this.cheerio.load(response.data);
+                // this.cloudflareError(response.status);
+                section.section.items = (0, KLMangaParser_1.parseHomeSections)($);
+                sectionCallback(section.section);
+            }
+            // Make sure the function completes
+            // await Promise.all(promises)
+        });
+    }
 }
 exports.KLManga = KLManga;
 
 },{"./KLMangaParser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
+exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     //   const image = $('.thumbnail').attr('src')
@@ -591,6 +636,24 @@ const parseSearchRequest = ($) => {
     return tiles;
 };
 exports.parseSearchRequest = parseSearchRequest;
+const parseHomeSections = ($) => {
+    const tiles = [];
+    const results = $('.bodythumb').find('.thumb-item-flow.col-6.col-md-3');
+    for (let result of results.toArray()) {
+        const mangaId = $(result).find('a').first().attr('href');
+        const image = $(result).find('.img-in-ratio.lazyloaded').attr('data-bg');
+        const title = $(result).find('.title-thumb').text();
+        tiles.push(createMangaTile({
+            id: mangaId,
+            image: image !== null && image !== void 0 ? image : 'https://i.imgur.com/GYUxEX8.png',
+            title: createIconText({
+                text: title,
+            }),
+        }));
+    }
+    return tiles;
+};
+exports.parseHomeSections = parseHomeSections;
 
 },{"paperback-extensions-common":5}]},{},[48])(48)
 });
