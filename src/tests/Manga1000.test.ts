@@ -24,12 +24,12 @@ describe('Manga1000 Tests', () => {
 
     // Validate that the fields are filled
     const data = details
-    console.log(data)
+    // console.log(data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty
     expect(data.titles, 'Missing Titles').to.be.not.empty
-    console.log(data.tags)
+    // console.log(data.tags)
   })
 
   it('Get Chapters', async () => {
@@ -63,15 +63,15 @@ describe('Manga1000 Tests', () => {
 
   it('Testing search', async () => {
     const testSearch: SearchRequest = {
-      title: '彼女',
+      // title: '彼女',
       parameters: {
-        includedTags: [],
+        includedTags: ['sf・ファンタジー'],
       },
     }
 
     const search = await wrapper.searchRequest(source, testSearch, 1)
     const result = search.results[0]
-    // console.log(search.results[4])
+    console.log(search.results[1])
 
     expect(result, 'No response from server').to.exist
 
