@@ -555,7 +555,7 @@ const parseChapterDetails = ($, mangaId, chapterId) => {
     const links = $('.reading-content').find('img');
     for (const img of links.toArray()) {
         let page = img.attribs['data-src']
-            ? img.attribs['data-src']
+            ? img.attribs['data-src'].trim()
             : img.attribs.src;
         pages.push(page);
     }
