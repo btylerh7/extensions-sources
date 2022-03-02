@@ -568,13 +568,17 @@ const parseChapterDetails = ($, mangaId, chapterId) => {
 };
 exports.parseChapterDetails = parseChapterDetails;
 const parseSearchRequest = ($) => {
-    var _a, _b;
+    var _a, _b, _c;
     const tiles = [];
     const results = $('.tab-content-wrap').find('.row.c-tabs-item__content');
     for (let result of results.toArray()) {
         // const id = article.attribs.class[0].split('-')[1]
-        const mangaId = $(result).find('.h4').find('a').first().attr('href');
-        const image = (_b = (_a = $(result).find('img')) === null || _a === void 0 ? void 0 : _a.first().attr('data-src')) !== null && _b !== void 0 ? _b : '';
+        const mangaId = (_a = $(result)
+            .find('.h4')
+            .find('a')
+            .first()
+            .attr('href')) === null || _a === void 0 ? void 0 : _a.split('manga/')[1];
+        const image = (_c = (_b = $(result).find('img')) === null || _b === void 0 ? void 0 : _b.first().attr('data-src')) !== null && _c !== void 0 ? _c : '';
         const title = $(result).find('.h4').first().text().split(' ')[0];
         tiles.push(createMangaTile({
             id: mangaId,
