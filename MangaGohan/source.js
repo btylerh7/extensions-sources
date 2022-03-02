@@ -497,7 +497,8 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
             const manga = (0, MangaGohanParser_1.parseSearchRequest)($);
-            metadata = manga.length > 0 ? { page: page + 1 } : undefined;
+            // metadata = manga.length > 0 ? { page: page + 1 } : undefined
+            metadata = page;
             return createPagedResults({
                 results: manga,
                 metadata,
