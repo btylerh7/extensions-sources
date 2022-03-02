@@ -589,7 +589,7 @@ const parseChapters = ($, mangaId) => {
     const chapterTable = $('tbody').find('a');
     for (let chapter of chapterTable.toArray()) {
         const id = chapter.attribs.href; //Decode link to chapter
-        const chapNum = chapter.attribs.title.split(' ')[1];
+        const chapNum = $('a', chapter).find('b').first().text().split(' ')[1];
         chapters.push(createChapter({
             id,
             mangaId,
