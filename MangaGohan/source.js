@@ -570,7 +570,7 @@ exports.parseChapterDetails = parseChapterDetails;
 const parseSearchRequest = ($) => {
     var _a, _b;
     const tiles = [];
-    const results = $('.tab-content-wrap').find('.c-tabs-item');
+    const results = $('.tab-content-wrap').find('.row.c-tabs-item__content');
     for (let result of results.toArray()) {
         // const id = article.attribs.class[0].split('-')[1]
         const mangaId = $(result).find('.h4').find('a').first().attr('href');
