@@ -136,7 +136,8 @@ export class MangaGohan extends Source {
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
     const manga = parseSearchRequest($)
-    metadata = manga.length > 0 ? { page: page + 1 } : undefined
+    // metadata = manga.length > 0 ? { page: page + 1 } : undefined
+    metadata = page
 
     return createPagedResults({
       results: manga,
