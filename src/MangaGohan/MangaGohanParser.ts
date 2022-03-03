@@ -20,11 +20,12 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   const author = $('author-content').find('a').first().text()
   const artist = $('artist-content').find('a').first().text()
   const tags: Tag[] = []
-  const data = $('.sub-menu').find('li')
+  const data = $('.sub-menu').find('a')
   for (const link of data.toArray()) {
-    const id = decodeURI($('a', link).attr('href')!.split('com/')[1]!)
-    const label = $('a', link).text().trim()
+    const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
+    const label = $(link).text().trim()
     if (!id || !label) continue
+    if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
     tags.push({ id: id!, label: label })
   }
   const tagSection: TagSection[] = [
@@ -203,11 +204,12 @@ export const parseHomeSections = (
 
 export const parseTags = ($: CheerioSelector): TagSection[] => {
   const tags: Tag[] = []
-  const data = $('.sub-menu').find('li')
+  const data = $('.sub-menu').find('a')
   for (const link of data.toArray()) {
-    const id = decodeURI($('a', link).attr('href')!.split('com/')[1]!)
-    const label = $('a', link).text().trim()
+    const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
+    const label = $(link).text().trim()
     if (!id || !label) continue
+    if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
     tags.push({ id: id!, label: label })
   }
   const tagSection: TagSection[] = [

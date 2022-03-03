@@ -19,12 +19,11 @@ describe('Manga1000 Tests', () => {
 
   it('Retrieve Manga Details', async () => {
     const details = await wrapper.getMangaDetails(source, mangaId)
-    expect(details, 'No results found with test-defined ID [' + mangaId + ']')
-      .to.exist
+    expect(details, 'No results found with test-defined ID [' + mangaId + ']').to.exist
 
     // Validate that the fields are filled
     const data = details
-    // console.log(data)
+    console.log('manga details:', data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty
@@ -48,11 +47,7 @@ describe('Manga1000 Tests', () => {
     //      const chapter = chapters[0]
     //        console.log(chapter)
 
-    const data = await wrapper.getChapterDetails(
-      source,
-      mangaId,
-      chapters[0]?.id ?? 'unknown'
-    )
+    const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
 

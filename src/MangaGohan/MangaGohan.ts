@@ -113,14 +113,12 @@ export class MangaGohan extends Source {
       request = createRequestObject({
         url: encodeURI(`${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`),
         method,
-        headers,
       })
     } else {
       {
         request = createRequestObject({
           url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
           method,
-          headers,
         })
       }
     }

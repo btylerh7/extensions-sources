@@ -23,7 +23,7 @@ describe('MangaGohan Tests', () => {
 
     // Validate that the fields are filled
     const data = details
-    // console.log(data)
+    console.log(data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
     // expect(data.desc, 'Missing Description').to.be.not.empty
@@ -37,7 +37,7 @@ describe('MangaGohan Tests', () => {
     expect(data, 'No chapters present for: [' + mangaId + ']').to.not.be.empty
 
     const entry = data[0]
-    // console.log(data[1])
+    console.log(data[1])
     expect(entry?.id, 'No ID present').to.not.be.empty
     // expect(entry?.name, 'No title available').to.not.be.empty
     expect(entry?.chapNum, 'No chapter number present').to.not.be.null
@@ -45,8 +45,8 @@ describe('MangaGohan Tests', () => {
 
   it('Get Chapter Details', async () => {
     const chapters = await wrapper.getChapters(source, mangaId)
-    //      const chapter = chapters[0]
-    //        console.log(chapter)
+    const chapter = chapters[0]
+    console.log(chapter)
 
     const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
     // console.log(data)
