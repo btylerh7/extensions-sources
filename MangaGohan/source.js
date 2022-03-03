@@ -475,24 +475,25 @@ class MangaGohan extends paperback_extensions_common_1.Source {
         });
     }
     getSearchResults(query, metadata) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
             let request;
-            // if (query.includedTags) {
-            //   request = createRequestObject({
-            //     url: encodeURI(
-            //       `${M1000_DOMAIN}${query.includedTags?.map((x: any) => x.id)[0]}`
-            //     ),
-            //     method,
-            //     headers,
-            //   })
-            {
+            if (query.includedTags) {
                 request = createRequestObject({
-                    url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+                    url: encodeURI(`${exports.MG_DOMAIN}/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
                     method,
                     headers,
                 });
+            }
+            else {
+                {
+                    request = createRequestObject({
+                        url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+                        method,
+                        headers,
+                    });
+                }
             }
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
@@ -518,13 +519,26 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             (0, MangaGohanParser_1.parseHomeSections)($, sectionCallback);
         });
     }
+    getTags() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = createRequestObject({
+                url: exports.MG_DOMAIN,
+                method,
+                headers,
+                cookies: this.cookies,
+            });
+            const response = yield this.requestManager.schedule(request, 1);
+            const $ = this.cheerio.load(response.data);
+            return (0, MangaGohanParser_1.parseTags)($);
+        });
+    }
 }
 exports.MangaGohan = MangaGohan;
 
 },{"./MangaGohanParser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
+exports.parseTags = exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
     const titles = [$('.post-title').find('h1').first().text().split(' ')[0]];
@@ -532,6 +546,22 @@ const parseMangaDetails = ($, mangaId) => {
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
     const author = $('author-content').find('a').first().text();
     const artist = $('artist-content').find('a').first().text();
+    const tags = [];
+    const data = $('.sub-menu').find('li');
+    for (const link of data.toArray()) {
+        const id = decodeURI($('a', link).attr('href').split('com/')[1]);
+        const label = $('a', link).text().trim();
+        if (!id || !label)
+            continue;
+        tags.push({ id: id, label: label });
+    }
+    const tagSection = [
+        createTagSection({
+            id: '0',
+            label: 'genres',
+            tags: tags.map((tag) => createTag(tag)),
+        }),
+    ];
     return createManga({
         id: mangaId,
         titles: titles,
@@ -540,7 +570,7 @@ const parseMangaDetails = ($, mangaId) => {
         status: status,
         author: author,
         artist: artist,
-        //   tags: tagSection,
+        tags: tagSection,
         // desc,
         // hentai
     });
@@ -669,47 +699,26 @@ const parseHomeSections = ($, sectionCallback) => {
     sectionCallback(recentlyUpdatedSection);
 };
 exports.parseHomeSections = parseHomeSections;
-//   export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
-//     const manga: MangaTile[] = []
-//     const results = $('center').find('article')
-//     for (let article of results.toArray()) {
-//       // const id = article.attribs.class[0].split('-')[1]
-//       const mangaId = decodeURI(
-//         $('.featured-thumb', article).find('a')!.attr('href')!
-//       ).split('/')[1]!
-//       const image = $(article).find('img')?.first().attr('src') ?? ''
-//       const title = $(article).find('.entry-title > a').text()
-//       manga.push(
-//         createMangaTile({
-//           id: mangaId,
-//           image: image,
-//           title: createIconText({
-//             text: title,
-//           }),
-//         })
-//       )
-//     }
-//     return manga
-//   }
-//   export const parseTags = ($: CheerioSelector): TagSection[] => {
-//     const tags: Tag[] = []
-//     const data = $('select').find('option')
-//     for (const option of data.toArray()) {
-//       const id = decodeURI($(option).attr('value')!)
-//       const label = $(option).text()
-//       // if (!id || !label) continue
-//       tags.push({ id: id, label: label })
-//     }
-//     tags.shift()
-//     const tagSection: TagSection[] = [
-//       createTagSection({
-//         id: '0',
-//         label: 'genres',
-//         tags: tags.map((tag) => createTag(tag)),
-//       }),
-//     ]
-//     return tagSection
-//   }
+const parseTags = ($) => {
+    const tags = [];
+    const data = $('.sub-menu').find('li');
+    for (const link of data.toArray()) {
+        const id = decodeURI($('a', link).attr('href').split('com/')[1]);
+        const label = $('a', link).text().trim();
+        if (!id || !label)
+            continue;
+        tags.push({ id: id, label: label });
+    }
+    const tagSection = [
+        createTagSection({
+            id: '0',
+            label: 'genres',
+            tags: tags.map((tag) => createTag(tag)),
+        }),
+    ];
+    return tagSection;
+};
+exports.parseTags = parseTags;
 
 },{"paperback-extensions-common":5}]},{},[48])(48)
 });

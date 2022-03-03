@@ -630,9 +630,7 @@ const parseChapterDetails = ($, mangaId, chapterId) => {
     const pages = [];
     const links = $('.wp-block-image').find('img');
     for (const img of links.toArray()) {
-        let page = img.attribs['data-src']
-            ? img.attribs['data-src']
-            : img.attribs.src;
+        let page = img.attribs['data-src'] ? img.attribs['data-src'] : img.attribs.src;
         pages.push(page);
     }
     return createChapterDetails({
