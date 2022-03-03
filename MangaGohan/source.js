@@ -650,6 +650,7 @@ const parseHomeSections = ($, sectionCallback) => {
     }
     topSection.items = top;
     for (let recentlyUpdatedManga of $('.main-col-inner.c-page')
+        .next()
         .find('.page-item-detail.manga')
         .toArray()) {
         const mangaId = $(recentlyUpdatedManga).find('a').first().attr('href').split('/manga/')[1];
