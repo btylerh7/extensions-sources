@@ -7,10 +7,10 @@ import {
   MangaStatus,
   MangaTile,
   HomeSectionType,
-  //PagedResults,
+  // PagedResults,
   // SearchRequest,
-  // TagSection,
-  // Tag,
+  TagSection,
+  Tag,
 } from 'paperback-extensions-common'
 
 export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
@@ -149,7 +149,7 @@ export const parseHomeSections = (
     .toArray()) {
     const mangaId = $(topManga).find('a').first().attr('href')!.split('/manga/')[1]
     const title = $(topManga).find('h3 > a').first().text().split(' ')[0]
-    const image = $(topManga).find('img').first().attr('src')
+    const image = $(topManga).find('img').first().attr('data-src')
 
     top.push(
       createMangaTile({
@@ -170,7 +170,7 @@ export const parseHomeSections = (
     .toArray()) {
     const mangaId = $(recentlyUpdatedManga).find('a').first().attr('href')!.split('/manga/')[1]
     const title = $(recentlyUpdatedManga).find('h3 > a').first().text().split(' ')[0]
-    const image = $(recentlyUpdatedManga).find('img').first().attr('src')
+    const image = $(recentlyUpdatedManga).find('img').first().attr('data-src')
 
     recentlyUpdated.push(
       createMangaTile({
@@ -186,47 +186,22 @@ export const parseHomeSections = (
   sectionCallback(recentlyUpdatedSection)
 }
 
-//   export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
-//     const manga: MangaTile[] = []
-//     const results = $('center').find('article')
-
-//     for (let article of results.toArray()) {
-//       // const id = article.attribs.class[0].split('-')[1]
-//       const mangaId = decodeURI(
-//         $('.featured-thumb', article).find('a')!.attr('href')!
-//       ).split('/')[1]!
-//       const image = $(article).find('img')?.first().attr('src') ?? ''
-//       const title = $(article).find('.entry-title > a').text()
-
-//       manga.push(
-//         createMangaTile({
-//           id: mangaId,
-//           image: image,
-//           title: createIconText({
-//             text: title,
-//           }),
-//         })
-//       )
-//     }
-//     return manga
-//   }
-
-//   export const parseTags = ($: CheerioSelector): TagSection[] => {
-//     const tags: Tag[] = []
-//     const data = $('select').find('option')
-//     for (const option of data.toArray()) {
-//       const id = decodeURI($(option).attr('value')!)
-//       const label = $(option).text()
-//       // if (!id || !label) continue
-//       tags.push({ id: id, label: label })
-//     }
-//     tags.shift()
-//     const tagSection: TagSection[] = [
-//       createTagSection({
-//         id: '0',
-//         label: 'genres',
-//         tags: tags.map((tag) => createTag(tag)),
-//       }),
-//     ]
-//     return tagSection
-//   }
+export const parseTags = ($: CheerioSelector): TagSection[] => {
+  const tags: Tag[] = []
+  const data = $('.sub-menu').find('a')
+  for (const option of data.toArray()) {
+    const id = decodeURI($(option).attr('value')!)
+    const label = $(option).text()
+    // if (!id || !label) continue
+    tags.push({ id: id, label: label })
+  }
+  tags.shift()
+  const tagSection: TagSection[] = [
+    createTagSection({
+      id: '0',
+      label: 'genres',
+      tags: tags.map((tag) => createTag(tag)),
+    }),
+  ]
+  return tagSection
+}
