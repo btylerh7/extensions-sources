@@ -19,8 +19,7 @@ describe('MangaGohan Tests', () => {
 
   it('Retrieve Manga Details', async () => {
     const details = await wrapper.getMangaDetails(source, mangaId)
-    expect(details, 'No results found with test-defined ID [' + mangaId + ']')
-      .to.exist
+    expect(details, 'No results found with test-defined ID [' + mangaId + ']').to.exist
 
     // Validate that the fields are filled
     const data = details
@@ -49,11 +48,7 @@ describe('MangaGohan Tests', () => {
     //      const chapter = chapters[0]
     //        console.log(chapter)
 
-    const data = await wrapper.getChapterDetails(
-      source,
-      mangaId,
-      chapters[0]?.id ?? 'unknown'
-    )
+    const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
     console.log(data)
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
@@ -87,8 +82,9 @@ describe('MangaGohan Tests', () => {
     const homePages = await wrapper.getHomePageSections(source)
     expect(homePages, 'No response from server').to.exist
     expect(homePages[0]?.items, 'No items present').to.exist
-    // console.log('latest:', homePages![0]!.items)
-    // console.log('top:', homePages![1]!.items)
+    console.log('featured:', homePages![0]!.items)
+    console.log('top:', homePages![1]!.items)
+    console.log('recently updated:', homePages![2]!.items)
   })
   it('Get tags', async () => {
     const tags = await wrapper.getTags(source)

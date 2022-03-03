@@ -3,7 +3,7 @@ import {
   Chapter,
   ChapterDetails,
   ContentRating,
-  // HomeSection,
+  HomeSection,
   // LanguageCode,
   Manga,
   // MangaUpdates,
@@ -23,7 +23,7 @@ import {
   parseChapters,
   parseChapterDetails,
   parseSearchRequest,
-  // parseHomeSections,
+  parseHomeSections,
   // parseTags,
 } from './MangaGohanParser'
 
@@ -95,10 +95,7 @@ export class MangaGohan extends Source {
 
     return parseChapters($, mangaId)
   }
-  async getChapterDetails(
-    mangaId: string,
-    chapterId: string
-  ): Promise<ChapterDetails> {
+  async getChapterDetails(mangaId: string, chapterId: string): Promise<ChapterDetails> {
     const request = createRequestObject({
       url: encodeURI(`${MG_DOMAIN}/manga/${mangaId}/${chapterId}`),
       method,
@@ -109,10 +106,7 @@ export class MangaGohan extends Source {
 
     return parseChapterDetails($, mangaId, chapterId)
   }
-  async getSearchResults(
-    query: SearchRequest,
-    metadata: any
-  ): Promise<PagedResults> {
+  async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
     let request
     // if (query.includedTags) {
@@ -125,9 +119,7 @@ export class MangaGohan extends Source {
     //   })
     {
       request = createRequestObject({
-        url: encodeURI(
-          `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`
-        ),
+        url: encodeURI(`${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`),
         method,
         headers,
       })
@@ -143,5 +135,18 @@ export class MangaGohan extends Source {
       results: manga,
       metadata,
     })
+  }
+  override async getHomePageSections(
+    sectionCallback: (section: HomeSection) => void
+  ): Promise<void> {
+    const request = createRequestObject({
+      url: MG_DOMAIN,
+      method: 'GET',
+      cookies: this.cookies,
+    })
+
+    const response = await this.requestManager.schedule(request, 1)
+    const $ = this.cheerio.load(response.data)
+    parseHomeSections($, sectionCallback)
   }
 }

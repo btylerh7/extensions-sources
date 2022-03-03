@@ -1,11 +1,12 @@
 import {
   Chapter,
   ChapterDetails,
-  // HomeSection,
+  HomeSection,
   LanguageCode,
   Manga,
   MangaStatus,
   MangaTile,
+  HomeSectionType,
   //PagedResults,
   // SearchRequest,
   // TagSection,
@@ -13,9 +14,7 @@ import {
 } from 'paperback-extensions-common'
 
 export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
-  const titles: string[] = [
-    $('.post-title').find('h1').first().text().split(' ')[0]!,
-  ]
+  const titles: string[] = [$('.post-title').find('h1').first().text().split(' ')[0]!]
   const image = $('.summary_image').find('img').attr('data-src')
   let status = MangaStatus.UNKNOWN //All manga is listed as ongoing
   const author = $('author-content').find('a').first().text()
@@ -64,9 +63,7 @@ export const parseChapterDetails = (
   const links = $('.reading-content').find('img')
 
   for (const img of links.toArray()) {
-    let page = img!.attribs!['data-src']
-      ? img!.attribs!['data-src'].trim()
-      : img!.attribs!.src!
+    let page = img!.attribs!['data-src'] ? img!.attribs!['data-src'].trim() : img!.attribs!.src!
     pages.push(page)
   }
   return createChapterDetails({
@@ -83,12 +80,7 @@ export const parseSearchRequest = ($: CheerioStatic) => {
 
   for (let result of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
-    const mangaId = $(result)
-      .find('.h4')
-      .find('a')
-      .first()
-      .attr('href')
-      ?.split('manga/')[1]!
+    const mangaId = $(result).find('.h4').find('a').first().attr('href')?.split('manga/')[1]!
     const image = $(result).find('img')?.first().attr('data-src') ?? ''
     const title = $(result).find('.h4').first().text().split(' ')[0]!
 
@@ -103,6 +95,95 @@ export const parseSearchRequest = ($: CheerioStatic) => {
     )
   }
   return tiles
+}
+
+export const parseHomeSections = (
+  $: CheerioStatic,
+  sectionCallback: (section: HomeSection) => void
+): void => {
+  const featuredSection = createHomeSection({
+    id: '0',
+    title: 'Featured',
+    type: HomeSectionType.featured,
+    view_more: false,
+  })
+  const topSection = createHomeSection({
+    id: '1',
+    title: 'Top Manga',
+    type: HomeSectionType.singleRowNormal,
+    view_more: false,
+  })
+  const recentlyUpdatedSection = createHomeSection({
+    id: '2',
+    title: 'Reccently Updated',
+    type: HomeSectionType.singleRowNormal,
+    view_more: false,
+  })
+
+  const featured = []
+  const top = []
+  const recentlyUpdated = []
+
+  //Retrieve Featured Manga Section
+
+  for (let featuredManga of $('.c-sidebar.c-top-sidebar').find('.slider__item').toArray()) {
+    const mangaId = $(featuredManga).find('a').first().attr('href')!.split('/manga/')[1]
+    const title = $(featuredManga).find('a').first().text().trim()
+    const image = $(featuredManga).find('img').first().attr('data-src')
+
+    featured.push(
+      createMangaTile({
+        id: mangaId!,
+        image: image!,
+        title: createIconText({
+          text: title,
+        }),
+      })
+    )
+    sectionCallback(featuredSection)
+  }
+  featuredSection.items = featured
+
+  for (let topManga of $('.main-sticky-mangas.main-col-inner.c-page')
+    .find('.page-item-detail.manga')
+    .toArray()) {
+    const mangaId = $(topManga).find('a').first().attr('href')!.split('/manga/')[1]
+    const title = $(topManga).find('h5 > a').first().text().split(' ')[0]
+    const image = $(topManga).find('img').first().attr('src')
+
+    top.push(
+      createMangaTile({
+        id: mangaId!,
+        image: image!,
+        title: createIconText({
+          text: title!,
+        }),
+      })
+    )
+    sectionCallback(topSection)
+  }
+  topSection.items = top
+
+  for (let recentlyUpdatedManga of $('.main-col-inner.c-page')
+    .next()
+    .find('.page-item-detail.manga')
+    .toArray()) {
+    const mangaId = $(recentlyUpdatedManga).find('a').first().attr('href')!.split('/manga/')[1]
+    const title = $(recentlyUpdatedManga).find('h5 > a').first().text().split(' ')[0]
+    const image = $(recentlyUpdatedManga).find('img').first().attr('src')
+
+    recentlyUpdated.push(
+      createMangaTile({
+        id: mangaId!,
+        image: image!,
+        title: createIconText({
+          text: title!,
+        }),
+      })
+    )
+    sectionCallback(recentlyUpdatedSection)
+  }
+  recentlyUpdatedSection.items = recentlyUpdated
 }
 
 //   export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
