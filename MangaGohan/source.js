@@ -483,7 +483,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
                 request = createRequestObject({
                     url: encodeURI(`${exports.MG_DOMAIN}/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
                     method,
-                    headers,
                 });
             }
             else {
@@ -491,7 +490,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
                     request = createRequestObject({
                         url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
                         method,
-                        headers,
                     });
                 }
             }
@@ -541,17 +539,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseTags = exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
+    var _a;
     const titles = [$('.post-title').find('h1').first().text().split(' ')[0]];
     const image = $('.summary_image').find('img').attr('data-src');
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
     const author = $('author-content').find('a').first().text();
     const artist = $('artist-content').find('a').first().text();
     const tags = [];
-    const data = $('.sub-menu').find('li');
+    const data = $('.sub-menu').find('a');
     for (const link of data.toArray()) {
-        const id = decodeURI($('a', link).attr('href').split('com/')[1]);
-        const label = $('a', link).text().trim();
+        const id = decodeURI($(link).attr('href').split('com/')[1]);
+        const label = $(link).text().trim();
         if (!id || !label)
+            continue;
+        if (!((_a = decodeURI($(link).attr('href').split('com/')[1])) === null || _a === void 0 ? void 0 : _a.startsWith('manga-genre')))
             continue;
         tags.push({ id: id, label: label });
     }
@@ -700,12 +701,15 @@ const parseHomeSections = ($, sectionCallback) => {
 };
 exports.parseHomeSections = parseHomeSections;
 const parseTags = ($) => {
+    var _a;
     const tags = [];
-    const data = $('.sub-menu').find('li');
+    const data = $('.sub-menu').find('a');
     for (const link of data.toArray()) {
-        const id = decodeURI($('a', link).attr('href').split('com/')[1]);
-        const label = $('a', link).text().trim();
+        const id = decodeURI($(link).attr('href').split('com/')[1]);
+        const label = $(link).text().trim();
         if (!id || !label)
+            continue;
+        if (!((_a = decodeURI($(link).attr('href').split('com/')[1])) === null || _a === void 0 ? void 0 : _a.startsWith('manga-genre')))
             continue;
         tags.push({ id: id, label: label });
     }
