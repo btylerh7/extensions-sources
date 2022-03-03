@@ -639,7 +639,7 @@ const parseHomeSections = ($, sectionCallback) => {
         .toArray()) {
         const mangaId = $(topManga).find('a').first().attr('href').split('/manga/')[1];
         const title = $(topManga).find('h3 > a').first().text().split(' ')[0];
-        const image = $(topManga).find('img').first().attr('src');
+        const image = $(topManga).find('img').first().attr('data-src');
         top.push(createMangaTile({
             id: mangaId,
             image: image,
@@ -656,7 +656,7 @@ const parseHomeSections = ($, sectionCallback) => {
         .toArray()) {
         const mangaId = $(recentlyUpdatedManga).find('a').first().attr('href').split('/manga/')[1];
         const title = $(recentlyUpdatedManga).find('h3 > a').first().text().split(' ')[0];
-        const image = $(recentlyUpdatedManga).find('img').first().attr('src');
+        const image = $(recentlyUpdatedManga).find('img').first().attr('data-src');
         recentlyUpdated.push(createMangaTile({
             id: mangaId,
             image: image,
