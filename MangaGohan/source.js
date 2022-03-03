@@ -505,18 +505,28 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             });
         });
     }
+    getHomePageSections(sectionCallback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = createRequestObject({
+                url: exports.MG_DOMAIN,
+                method: 'GET',
+                cookies: this.cookies,
+            });
+            const response = yield this.requestManager.schedule(request, 1);
+            const $ = this.cheerio.load(response.data);
+            (0, MangaGohanParser_1.parseHomeSections)($, sectionCallback);
+        });
+    }
 }
 exports.MangaGohan = MangaGohan;
 
 },{"./MangaGohanParser":49,"paperback-extensions-common":5}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
+exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
-    const titles = [
-        $('.post-title').find('h1').first().text().split(' ')[0],
-    ];
+    const titles = [$('.post-title').find('h1').first().text().split(' ')[0]];
     const image = $('.summary_image').find('img').attr('data-src');
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
     const author = $('author-content').find('a').first().text();
@@ -555,9 +565,7 @@ const parseChapterDetails = ($, mangaId, chapterId) => {
     const pages = [];
     const links = $('.reading-content').find('img');
     for (const img of links.toArray()) {
-        let page = img.attribs['data-src']
-            ? img.attribs['data-src'].trim()
-            : img.attribs.src;
+        let page = img.attribs['data-src'] ? img.attribs['data-src'].trim() : img.attribs.src;
         pages.push(page);
     }
     return createChapterDetails({
@@ -574,11 +582,7 @@ const parseSearchRequest = ($) => {
     const results = $('.tab-content-wrap').find('.row.c-tabs-item__content');
     for (let result of results.toArray()) {
         // const id = article.attribs.class[0].split('-')[1]
-        const mangaId = (_a = $(result)
-            .find('.h4')
-            .find('a')
-            .first()
-            .attr('href')) === null || _a === void 0 ? void 0 : _a.split('manga/')[1];
+        const mangaId = (_a = $(result).find('.h4').find('a').first().attr('href')) === null || _a === void 0 ? void 0 : _a.split('manga/')[1];
         const image = (_c = (_b = $(result).find('img')) === null || _b === void 0 ? void 0 : _b.first().attr('data-src')) !== null && _c !== void 0 ? _c : '';
         const title = $(result).find('.h4').first().text().split(' ')[0];
         tiles.push(createMangaTile({
@@ -592,6 +596,77 @@ const parseSearchRequest = ($) => {
     return tiles;
 };
 exports.parseSearchRequest = parseSearchRequest;
+const parseHomeSections = ($, sectionCallback) => {
+    const featuredSection = createHomeSection({
+        id: '0',
+        title: 'Featured',
+        type: paperback_extensions_common_1.HomeSectionType.featured,
+        view_more: false,
+    });
+    const topSection = createHomeSection({
+        id: '1',
+        title: 'Top Manga',
+        type: paperback_extensions_common_1.HomeSectionType.singleRowNormal,
+        view_more: false,
+    });
+    const recentlyUpdatedSection = createHomeSection({
+        id: '2',
+        title: 'Reccently Updated',
+        type: paperback_extensions_common_1.HomeSectionType.singleRowNormal,
+        view_more: false,
+    });
+    const featured = [];
+    const top = [];
+    const recentlyUpdated = [];
+    //Retrieve Featured Manga Section
+    for (let featuredManga of $('.c-sidebar.c-top-sidebar').find('.slider__item').toArray()) {
+        const mangaId = $(featuredManga).find('a').first().attr('href').split('/manga/')[1];
+        const title = $(featuredManga).find('a').first().text().trim();
+        const image = $(featuredManga).find('img').first().attr('data-src');
+        featured.push(createMangaTile({
+            id: mangaId,
+            image: image,
+            title: createIconText({
+                text: title,
+            }),
+        }));
+        sectionCallback(featuredSection);
+    }
+    featuredSection.items = featured;
+    for (let topManga of $('.main-sticky-mangas.main-col-inner.c-page')
+        .find('.page-item-detail.manga')
+        .toArray()) {
+        const mangaId = $(topManga).find('a').first().attr('href').split('/manga/')[1];
+        const title = $(topManga).find('h5 > a').first().text().split(' ')[0];
+        const image = $(topManga).find('img').first().attr('src');
+        top.push(createMangaTile({
+            id: mangaId,
+            image: image,
+            title: createIconText({
+                text: title,
+            }),
+        }));
+        sectionCallback(topSection);
+    }
+    topSection.items = top;
+    for (let recentlyUpdatedManga of $('.main-col-inner.c-page')
+        .find('.page-item-detail.manga')
+        .toArray()) {
+        const mangaId = $(recentlyUpdatedManga).find('a').first().attr('href').split('/manga/')[1];
+        const title = $(recentlyUpdatedManga).find('h5 > a').first().text().split(' ')[0];
+        const image = $(recentlyUpdatedManga).find('img').first().attr('src');
+        recentlyUpdated.push(createMangaTile({
+            id: mangaId,
+            image: image,
+            title: createIconText({
+                text: title,
+            }),
+        }));
+        sectionCallback(recentlyUpdatedSection);
+    }
+    recentlyUpdatedSection.items = recentlyUpdated;
+};
+exports.parseHomeSections = parseHomeSections;
 //   export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
 //     const manga: MangaTile[] = []
 //     const results = $('center').find('article')
