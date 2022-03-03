@@ -119,7 +119,7 @@ export class MangaGohan extends Source {
     //   })
     {
       request = createRequestObject({
-        url: encodeURI(`${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`),
+        url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
         method,
         headers,
       })
@@ -141,7 +141,8 @@ export class MangaGohan extends Source {
   ): Promise<void> {
     const request = createRequestObject({
       url: MG_DOMAIN,
-      method: 'GET',
+      method,
+      headers,
       cookies: this.cookies,
     })
 

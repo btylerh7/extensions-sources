@@ -49,7 +49,7 @@ describe('MangaGohan Tests', () => {
     //        console.log(chapter)
 
     const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
-    console.log(data)
+    // console.log(data)
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
 
@@ -82,17 +82,17 @@ describe('MangaGohan Tests', () => {
     const homePages = await wrapper.getHomePageSections(source)
     expect(homePages, 'No response from server').to.exist
     expect(homePages[0]?.items, 'No items present').to.exist
-    console.log('featured:', homePages![0]!.items)
-    console.log('top:', homePages![1]!.items)
+    // console.log('featured:', homePages![0]!.items)
+    // console.log('top:', homePages![1]!.items)
     console.log('recently updated:', homePages![2]!.items)
   })
-  it('Get tags', async () => {
-    const tags = await wrapper.getTags(source)
-    const taglist = tags![0]?.tags!
-    console.log(taglist)
-    expect(tags, 'No server response').to.exist
-    expect(tags, 'Empty server response').to.not.be.empty
-  })
+  // it('Get tags', async () => {
+  //   const tags = await wrapper.getTags(source)
+  //   const taglist = tags![0]?.tags!
+  //   // console.log(taglist)
+  //   expect(tags, 'No server response').to.exist
+  //   expect(tags, 'Empty server response').to.not.be.empty
+  // })
 
   // it('Testing Notifications', async () => {
   //   const updates = await wrapper.filterUpdatedManga(
