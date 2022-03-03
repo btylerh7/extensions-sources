@@ -62,7 +62,7 @@ describe('MangaGohan Tests', () => {
     const testSearch: SearchRequest = {
       title: 'kanojo',
       parameters: {
-        // includedTags: ['sf・ファンタジー'],
+        includedTags: ['sf・ファンタジー'],
       },
     }
 
@@ -84,15 +84,15 @@ describe('MangaGohan Tests', () => {
     expect(homePages[0]?.items, 'No items present').to.exist
     // console.log('featured:', homePages![0]!.items)
     // console.log('top:', homePages![1]!.items)
-    console.log('recently updated:', homePages![2]!.items)
+    // console.log('recently updated:', homePages![2]!.items)
   })
-  // it('Get tags', async () => {
-  //   const tags = await wrapper.getTags(source)
-  //   const taglist = tags![0]?.tags!
-  //   // console.log(taglist)
-  //   expect(tags, 'No server response').to.exist
-  //   expect(tags, 'Empty server response').to.not.be.empty
-  // })
+  it('Get tags', async () => {
+    const tags = await wrapper.getTags(source)
+    const taglist = tags![0]?.tags!
+    console.log(taglist)
+    expect(tags, 'No server response').to.exist
+    expect(tags, 'Empty server response').to.not.be.empty
+  })
 
   // it('Testing Notifications', async () => {
   //   const updates = await wrapper.filterUpdatedManga(

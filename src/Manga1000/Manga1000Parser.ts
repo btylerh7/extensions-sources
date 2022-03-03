@@ -53,9 +53,7 @@ export const parseChapters = ($: CheerioStatic, mangaId: string): Chapter[] => {
 
   for (let href of chapterLinks.toArray()) {
     const id = decodeURI(href!.attribs!.href!) //Decode link to chapter
-    const chapNum = Number(
-      href.children[0]!.data!.match('【(.*?)】')?.[1]!.replace(/第|話/g, '')
-    )
+    const chapNum = Number(href.children[0]!.data!.match('【(.*?)】')?.[1]!.replace(/第|話/g, ''))
     chapters.push(
       createChapter({
         id,
@@ -78,9 +76,7 @@ export const parseChapterDetails = (
   const links = $('.wp-block-image').find('img')
 
   for (const img of links.toArray()) {
-    let page = img!.attribs!['data-src']
-      ? img!.attribs!['data-src']
-      : img!.attribs!.src!
+    let page = img!.attribs!['data-src'] ? img!.attribs!['data-src'] : img!.attribs!.src!
     pages.push(page)
   }
   return createChapterDetails({
@@ -97,9 +93,7 @@ export const parseSearchRequest = ($: CheerioStatic) => {
 
   for (let article of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
-    const mangaId = decodeURI(
-      $('.featured-thumb', article).find('a')!.attr('href')!
-    )
+    const mangaId = decodeURI($('.featured-thumb', article).find('a')!.attr('href')!)
     const image = $(article).find('img')?.first().attr('src') ?? ''
     const title = $(article).find('.entry-title > a').text()
 
@@ -122,9 +116,7 @@ export const parseHomeSections = ($: CheerioStatic): MangaTile[] => {
 
   for (let article of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
-    const mangaId = decodeURI(
-      $('.featured-thumb', article).find('a')!.attr('href')!
-    ).split('/')[1]!
+    const mangaId = decodeURI($('.featured-thumb', article).find('a')!.attr('href')!).split('/')[1]!
     const image = $(article).find('img')?.first().attr('src') ?? ''
     const title = $(article).find('.entry-title > a').text()
 

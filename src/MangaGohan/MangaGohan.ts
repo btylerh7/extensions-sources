@@ -16,7 +16,7 @@ import {
   SourceInfo,
   // RequestHeaders,
   TagType,
-  // TagSection,
+  TagSection,
 } from 'paperback-extensions-common'
 import {
   parseMangaDetails,
@@ -24,7 +24,7 @@ import {
   parseChapterDetails,
   parseSearchRequest,
   parseHomeSections,
-  // parseTags,
+  parseTags,
 } from './MangaGohanParser'
 
 export const MG_DOMAIN = 'https://mangagohan.com'
@@ -109,22 +109,21 @@ export class MangaGohan extends Source {
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
     let request
-    // if (query.includedTags) {
-    //   request = createRequestObject({
-    //     url: encodeURI(
-    //       `${M1000_DOMAIN}${query.includedTags?.map((x: any) => x.id)[0]}`
-    //     ),
-    //     method,
-    //     headers,
-    //   })
-    {
+    if (query.includedTags) {
       request = createRequestObject({
-        url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+        url: encodeURI(`${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`),
         method,
         headers,
       })
+    } else {
+      {
+        request = createRequestObject({
+          url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+          method,
+          headers,
+        })
+      }
     }
-
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
     const manga = parseSearchRequest($)
@@ -149,5 +148,16 @@ export class MangaGohan extends Source {
     const response = await this.requestManager.schedule(request, 1)
     const $ = this.cheerio.load(response.data)
     parseHomeSections($, sectionCallback)
+  }
+  override async getTags(): Promise<TagSection[]> {
+    const request = createRequestObject({
+      url: MG_DOMAIN,
+      method,
+      headers,
+      cookies: this.cookies,
+    })
+    const response = await this.requestManager.schedule(request, 1)
+    const $ = this.cheerio.load(response.data)
+    return parseTags($)
   }
 }
