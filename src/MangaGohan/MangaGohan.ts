@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable @typescript-eslint/indent' */
+/* eslint-disable @typescript-eslint/indent */
 import {
   Chapter,
   ChapterDetails,
@@ -20,11 +20,11 @@ import {
   // TagSection,
 } from 'paperback-extensions-common'
 import {
-  parseMangaDetails,
-  parseChapters,
-  parseChapterDetails,
-  parseSearchRequest,
-  parseHomeSections,
+    parseMangaDetails,
+    parseChapters,
+    parseChapterDetails,
+    parseSearchRequest,
+    parseHomeSections,
   // parseTags,
 } from './MangaGohanParser'
 
