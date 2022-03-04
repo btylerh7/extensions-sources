@@ -442,7 +442,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: encodeURI(`${exports.MG_DOMAIN}/manga/${mangaId}`),
                 method,
-                headers,
                 cookies: this.cookies,
             });
             const data = yield this.requestManager.schedule(request, 1);
@@ -455,7 +454,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: `${exports.MG_DOMAIN}/manga/${mangaId}`,
                 method,
-                headers,
+                cookies: this.cookies,
             });
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
@@ -467,7 +466,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: encodeURI(`${exports.MG_DOMAIN}/manga/${mangaId}/${chapterId}`),
                 method,
-                headers,
+                cookies: this.cookies,
             });
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
@@ -483,7 +482,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
                 request = createRequestObject({
                     url: `${exports.MG_DOMAIN}/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`,
                     method,
-                    headers,
+                    cookies: this.cookies,
                 });
             }
             else {
@@ -491,7 +490,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
                     request = createRequestObject({
                         url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
                         method,
-                        headers,
+                        cookies: this.cookies,
                     });
                 }
             }
@@ -511,7 +510,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: exports.MG_DOMAIN,
                 method,
-                headers,
                 cookies: this.cookies,
             });
             const response = yield this.requestManager.schedule(request, 1);
@@ -524,7 +522,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const request = createRequestObject({
                 url: exports.MG_DOMAIN,
                 method,
-                headers,
                 cookies: this.cookies,
             });
             const response = yield this.requestManager.schedule(request, 1);
