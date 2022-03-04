@@ -427,6 +427,16 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             requestsPerSecond: 4,
             requestTimeout: 15000,
         });
+        // override async getTags(): Promise<TagSection[]> {
+        //   const request = createRequestObject({
+        //     url: MG_DOMAIN,
+        //     method,
+        //     headers,
+        //   })
+        //   const response = await this.requestManager.schedule(request, 1)
+        //   const $ = this.cheerio.load(response.data)
+        //   return parseTags($)
+        // }
     }
     getCloudflareBypassRequest() {
         return createRequestObject({
@@ -515,18 +525,6 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             const response = yield this.requestManager.schedule(request, 1);
             const $ = this.cheerio.load(response.data);
             (0, MangaGohanParser_1.parseHomeSections)($, sectionCallback);
-        });
-    }
-    getTags() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const request = createRequestObject({
-                url: exports.MG_DOMAIN,
-                method,
-                headers,
-            });
-            const response = yield this.requestManager.schedule(request, 1);
-            const $ = this.cheerio.load(response.data);
-            return (0, MangaGohanParser_1.parseTags)($);
         });
     }
 }
