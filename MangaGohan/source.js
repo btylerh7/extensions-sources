@@ -392,10 +392,10 @@ exports.MangaGohan = exports.MangaGohanInfo = exports.MG_DOMAIN = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaGohanParser_1 = require("./MangaGohanParser");
 exports.MG_DOMAIN = 'https://mangagohan.com';
-const headers = {
-    'content-type': 'application/x-www-form-urlencoded',
-    Referer: `${exports.MG_DOMAIN}`,
-};
+// const headers = {
+//   'content-type': 'application/x-www-form-urlencoded',
+//   Referer: `${MG_DOMAIN}`,
+// }
 const method = 'GET';
 exports.MangaGohanInfo = {
     version: '0.5',
