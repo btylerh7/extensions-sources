@@ -37,7 +37,7 @@ describe('MangaGohan Tests', () => {
     expect(data, 'No chapters present for: [' + mangaId + ']').to.not.be.empty
 
     const entry = data[0]
-    console.log(data[1])
+    // console.log(data[1])
     expect(entry?.id, 'No ID present').to.not.be.empty
     // expect(entry?.name, 'No title available').to.not.be.empty
     expect(entry?.chapNum, 'No chapter number present').to.not.be.null
@@ -45,8 +45,8 @@ describe('MangaGohan Tests', () => {
 
   it('Get Chapter Details', async () => {
     const chapters = await wrapper.getChapters(source, mangaId)
-    const chapter = chapters[0]
-    console.log(chapter)
+    // const chapter = chapters[0]
+    // console.log(chapter)
 
     const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
     // console.log(data)
@@ -68,7 +68,7 @@ describe('MangaGohan Tests', () => {
 
     const search = await wrapper.searchRequest(source, testSearch, 1)
     const result = search.results[0]
-    // console.log(search.results[14])
+    console.log(search.results[0])
 
     expect(result, 'No response from server').to.exist
 
@@ -82,9 +82,9 @@ describe('MangaGohan Tests', () => {
     const homePages = await wrapper.getHomePageSections(source)
     expect(homePages, 'No response from server').to.exist
     expect(homePages[0]?.items, 'No items present').to.exist
-    // console.log('featured:', homePages![0]!.items)
-    // console.log('top:', homePages![1]!.items)
-    // console.log('recently updated:', homePages![2]!.items)
+    console.log('featured:', homePages![0]!.items![0])
+    console.log('top:', homePages![1]!.items![0])
+    console.log('recently updated:', homePages![2]!.items![0])
   })
   it('Get tags', async () => {
     const tags = await wrapper.getTags(source)
