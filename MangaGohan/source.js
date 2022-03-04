@@ -389,7 +389,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MangaGohan = exports.MangaGohanInfo = exports.MG_DOMAIN = void 0;
 /* eslint-disable linebreak-style */
-/* eslint-disable @typescript-eslint/indent' */
+/* eslint-disable @typescript-eslint/indent */
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaGohanParser_1 = require("./MangaGohanParser");
 exports.MG_DOMAIN = 'https://mangagohan.com';
@@ -537,31 +537,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseTags = exports.parseHomeSections = exports.parseSearchRequest = exports.parseChapterDetails = exports.parseChapters = exports.parseMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const parseMangaDetails = ($, mangaId) => {
-    var _a;
     const titles = [$('.post-title').find('h1').first().text().split(' ')[0]];
     const image = $('.summary_image').find('img').attr('data-src');
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
     const author = $('.author-content').find('a').first().text();
     const artist = $('.artist-content').find('a').first().text();
     const desc = $('.Y2IQFc').text();
-    const tags = [];
-    const data = $('.sub-menu').find('a');
-    for (const link of data.toArray()) {
-        const id = decodeURI($(link).attr('href').split('com/')[1]);
-        const label = $(link).text().trim();
-        if (!id || !label)
-            continue;
-        if (!((_a = decodeURI($(link).attr('href').split('com/')[1])) === null || _a === void 0 ? void 0 : _a.startsWith('manga-genre')))
-            continue;
-        tags.push({ id: id, label: label });
-    }
-    const tagSection = [
-        createTagSection({
-            id: '0',
-            label: 'genres',
-            tags: tags.map((tag) => createTag(tag)),
-        }),
-    ];
+    // const tags: Tag[] = []
+    // const data = $('.sub-menu').find('a')
+    // for (const link of data.toArray()) {
+    //   const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
+    //   const label = $(link).text().trim()
+    //   if (!id || !label) continue
+    //   if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
+    //   tags.push({ id: id!, label: label })
+    // }
+    // const tagSection: TagSection[] = [
+    //   createTagSection({
+    //     id: '0',
+    //     label: 'genres',
+    //     tags: tags.map((tag) => createTag(tag)),
+    //   }),
+    // ]
     return createManga({
         id: mangaId,
         titles: titles,
@@ -570,7 +567,7 @@ const parseMangaDetails = ($, mangaId) => {
         status: status,
         author: author,
         artist: artist,
-        tags: tagSection,
+        // tags: tagSection,
         desc: desc !== null && desc !== void 0 ? desc : '',
         // hentai
     });
