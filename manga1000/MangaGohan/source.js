@@ -389,7 +389,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MangaGohan = exports.MangaGohanInfo = exports.MG_DOMAIN = void 0;
 /* eslint-disable linebreak-style */
-/* eslint-disable @typescript-eslint/indent' */
+/* eslint-disable @typescript-eslint/indent */
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaGohanParser_1 = require("./MangaGohanParser");
 exports.MG_DOMAIN = 'https://mangagohan.com';
