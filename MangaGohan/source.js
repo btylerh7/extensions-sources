@@ -453,7 +453,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
     getChapters(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: encodeURI(`${exports.MG_DOMAIN}/manga/${mangaId}`),
+                url: `${exports.MG_DOMAIN}/manga/${mangaId}`,
                 method,
                 headers,
             });
@@ -481,8 +481,9 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             let request;
             if (query.includedTags) {
                 request = createRequestObject({
-                    url: encodeURI(`${exports.MG_DOMAIN}/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`),
+                    url: `${exports.MG_DOMAIN}/${(_b = query.includedTags) === null || _b === void 0 ? void 0 : _b.map((x) => x.id)[0]}`,
                     method,
+                    headers,
                 });
             }
             else {
@@ -490,14 +491,15 @@ class MangaGohan extends paperback_extensions_common_1.Source {
                     request = createRequestObject({
                         url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
                         method,
+                        headers,
                     });
                 }
             }
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
             const manga = (0, MangaGohanParser_1.parseSearchRequest)($);
-            // metadata = manga.length > 0 ? { page: page + 1 } : undefined
-            metadata = page;
+            metadata = manga.length > 0 ? { page: page + 1 } : undefined;
+            // metadata = page
             return createPagedResults({
                 results: manga,
                 metadata,
@@ -543,8 +545,9 @@ const parseMangaDetails = ($, mangaId) => {
     const titles = [$('.post-title').find('h1').first().text().split(' ')[0]];
     const image = $('.summary_image').find('img').attr('data-src');
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
-    const author = $('author-content').find('a').first().text();
-    const artist = $('artist-content').find('a').first().text();
+    const author = $('.author-content').find('a').first().text();
+    const artist = $('.artist-content').find('a').first().text();
+    const desc = $('.Y2IQFc').text();
     const tags = [];
     const data = $('.sub-menu').find('a');
     for (const link of data.toArray()) {
@@ -572,7 +575,7 @@ const parseMangaDetails = ($, mangaId) => {
         author: author,
         artist: artist,
         tags: tagSection,
-        // desc,
+        desc: desc !== null && desc !== void 0 ? desc : '',
         // hentai
     });
 };
