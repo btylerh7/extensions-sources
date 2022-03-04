@@ -97,10 +97,7 @@ export class KLManga extends Source {
     const chapterList = parseChapters($, mangaId)
     return chapterList
   }
-  async getChapterDetails(
-    mangaId: string,
-    chapterId: string
-  ): Promise<ChapterDetails> {
+  async getChapterDetails(mangaId: string, chapterId: string): Promise<ChapterDetails> {
     const request = createRequestObject({
       url: `${KLM_DOMAIN}/${chapterId}`,
       method,
@@ -112,10 +109,7 @@ export class KLManga extends Source {
 
     return parseChapterDetails($, mangaId, chapterId)
   }
-  async getSearchResults(
-    query: SearchRequest,
-    metadata: any
-  ): Promise<PagedResults> {
+  async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page
     if (metadata && metadata.page) {
       page = metadata.page
@@ -124,9 +118,9 @@ export class KLManga extends Source {
     }
     const request = createRequestObject({
       url: encodeURI(
-        `${KLM_DOMAIN}/manga-list.html${
-          page > 1 && `?listType=pagination&page=${page}`
-        }?name=${query.title}`
+        `${KLM_DOMAIN}/manga-list.html${page > 1 && `?listType=pagination&page=${page}`}?name=${
+          query.title
+        }`
       ),
       method,
       headers,
