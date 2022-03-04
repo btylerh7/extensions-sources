@@ -30,7 +30,7 @@ import {
 export const MG_DOMAIN = 'https://mangagohan.com'
 const headers = {
   'content-type': 'application/x-www-form-urlencoded',
-  Referer: `${MG_DOMAIN}`,
+  Referer: MG_DOMAIN,
 }
 const method = 'GET'
 
@@ -77,7 +77,6 @@ export class MangaGohan extends Source {
       url: encodeURI(`${MG_DOMAIN}/manga/${mangaId}`),
       method,
       headers,
-      cookies: this.cookies,
     })
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
@@ -86,7 +85,7 @@ export class MangaGohan extends Source {
   }
   async getChapters(mangaId: string): Promise<Chapter[]> {
     const request = createRequestObject({
-      url: encodeURI(`${MG_DOMAIN}/manga/${mangaId}`),
+      url: `${MG_DOMAIN}/manga/${mangaId}`,
       method,
       headers,
     })
@@ -111,22 +110,24 @@ export class MangaGohan extends Source {
     let request
     if (query.includedTags) {
       request = createRequestObject({
-        url: encodeURI(`${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`),
+        url: `${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`,
         method,
+        headers,
       })
     } else {
       {
         request = createRequestObject({
           url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
           method,
+          headers,
         })
       }
     }
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
     const manga = parseSearchRequest($)
-    // metadata = manga.length > 0 ? { page: page + 1 } : undefined
-    metadata = page
+    metadata = manga.length > 0 ? { page: page + 1 } : undefined
+    // metadata = page
 
     return createPagedResults({
       results: manga,
@@ -140,7 +141,6 @@ export class MangaGohan extends Source {
       url: MG_DOMAIN,
       method,
       headers,
-      cookies: this.cookies,
     })
 
     const response = await this.requestManager.schedule(request, 1)
@@ -152,7 +152,6 @@ export class MangaGohan extends Source {
       url: MG_DOMAIN,
       method,
       headers,
-      cookies: this.cookies,
     })
     const response = await this.requestManager.schedule(request, 1)
     const $ = this.cheerio.load(response.data)

@@ -26,7 +26,7 @@ describe('MangaGohan Tests', () => {
     console.log(data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
-    // expect(data.desc, 'Missing Description').to.be.not.empty
+    expect(data.desc, 'Missing Description').to.be.not.empty
     expect(data.titles, 'Missing Titles').to.be.not.empty
     // console.log(data.tags)
   })

@@ -17,8 +17,9 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   const titles: string[] = [$('.post-title').find('h1').first().text().split(' ')[0]!]
   const image = $('.summary_image').find('img').attr('data-src')
   let status = MangaStatus.UNKNOWN //All manga is listed as ongoing
-  const author = $('author-content').find('a').first().text()
-  const artist = $('artist-content').find('a').first().text()
+  const author = $('.author-content').find('a').first().text()
+  const artist = $('.artist-content').find('a').first().text()
+  const desc = $('.Y2IQFc').text()
   const tags: Tag[] = []
   const data = $('.sub-menu').find('a')
   for (const link of data.toArray()) {
@@ -45,7 +46,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     author: author,
     artist: artist,
     tags: tagSection,
-    // desc,
+    desc: desc ?? '',
     // hentai
   })
 }
