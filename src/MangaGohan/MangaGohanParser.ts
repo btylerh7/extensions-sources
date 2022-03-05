@@ -20,23 +20,23 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   const author = $('.author-content').find('a').first().text()
   const artist = $('.artist-content').find('a').first().text()
   const desc = $('.Y2IQFc').text()
-  const tags: Tag[] = []
-  const data = $('.sub-menu').find('a')
-  for (const link of data.toArray()) {
-    const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
-    const label = $(link).text().trim()
-    if (!id || !label) continue
-    if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
-    tags.push({ id: id!, label: label })
-  }
-  const tagSection: TagSection[] = [
-    createTagSection({
-      id: '0',
-      label: 'genres',
-      tags: tags.map((tag) => createTag(tag)),
-    }),
-  ]
-  console.log('Get Manga Function: title:',titles,'image',image,'mangaId',tagSection, mangaId)
+  // const tags: Tag[] = []
+  // const data = $('.sub-menu').find('a')
+  // for (const link of data.toArray()) {
+  //   const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
+  //   const label = $(link).text().trim()
+  //   if (!id || !label) continue
+  //   if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
+  //   tags.push({ id: id!, label: label })
+  // }
+  // const tagSection: TagSection[] = [
+  //   createTagSection({
+  //     id: '0',
+  //     label: 'genres',
+  //     tags: tags.map((tag) => createTag(tag)),
+  //   }),
+  // ]
+  console.log('Get Manga Function: title:',titles,'image',image,'mangaId', mangaId)
   return createManga({
     id: mangaId,
     titles: titles,
@@ -45,7 +45,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     status: status,
     author: author,
     artist: artist,
-    tags: tagSection,
+    // tags: tagSection,
     desc: desc ?? '',
     // hentai
   })

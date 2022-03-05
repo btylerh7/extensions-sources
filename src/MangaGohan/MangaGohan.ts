@@ -17,7 +17,7 @@ import {
   SourceInfo,
   // RequestHeaders,
   TagType,
-  TagSection,
+  // TagSection,
 } from 'paperback-extensions-common'
 import {
     parseMangaDetails,
@@ -25,7 +25,7 @@ import {
     parseChapterDetails,
     parseSearchRequest,
     parseHomeSections,
-  parseTags,
+  // parseTags,
 } from './MangaGohanParser'
 
 export const MG_DOMAIN = 'https://mangagohan.com'
@@ -144,14 +144,14 @@ export class MangaGohan extends Source {
     const $ = this.cheerio.load(response.data)
     parseHomeSections($, sectionCallback)
   }
-  override async getTags(): Promise<TagSection[]> {
-    const request = createRequestObject({
-      url: MG_DOMAIN,
-      method,
-      headers,
-    })
-    const response = await this.requestManager.schedule(request, 1)
-    const $ = this.cheerio.load(response.data)
-    return parseTags($)
-  }
+  // override async getTags(): Promise<TagSection[]> {
+  //   const request = createRequestObject({
+  //     url: MG_DOMAIN,
+  //     method,
+  //     headers,
+  //   })
+  //   const response = await this.requestManager.schedule(request, 1)
+  //   const $ = this.cheerio.load(response.data)
+  //   return parseTags($)
+  // }
 }
