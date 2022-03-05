@@ -498,7 +498,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             //   })
             type = 'title';
             const request = createRequestObject({
-                url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+                url: encodeURI(`${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`),
                 method,
                 headers,
             });
