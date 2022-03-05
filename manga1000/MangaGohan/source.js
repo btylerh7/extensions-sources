@@ -488,6 +488,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let page = (_a = metadata === null || metadata === void 0 ? void 0 : metadata.page) !== null && _a !== void 0 ? _a : 1;
+            let type;
             // let request
             // if (query.includedTags) {
             //   request = createRequestObject({
@@ -495,6 +496,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             //     method,
             //     headers,
             //   })
+            type = 'title';
             const request = createRequestObject({
                 url: `${exports.MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
                 method,
@@ -502,7 +504,7 @@ class MangaGohan extends paperback_extensions_common_1.Source {
             });
             const data = yield this.requestManager.schedule(request, 1);
             let $ = this.cheerio.load(data.data);
-            const manga = (0, MangaGohanParser_1.parseSearchRequest)($);
+            const manga = (0, MangaGohanParser_1.parseSearchRequest)($, type);
             metadata = manga.length > 0 ? { page: page + 1 } : undefined;
             // metadata = page
             return createPagedResults({
@@ -537,7 +539,7 @@ const parseMangaDetails = ($, mangaId) => {
     let status = paperback_extensions_common_1.MangaStatus.UNKNOWN; //All manga is listed as ongoing
     const author = $('.author-content').find('a').first().text();
     const artist = $('.artist-content').find('a').first().text();
-    const desc = $('.Y2IQFc').text();
+    const desc = $('.description-summary').find('p').first().text();
     // const tags: Tag[] = []
     // const data = $('.sub-menu').find('a')
     // for (const link of data.toArray()) {
@@ -600,22 +602,28 @@ const parseChapterDetails = ($, mangaId, chapterId) => {
     });
 };
 exports.parseChapterDetails = parseChapterDetails;
-const parseSearchRequest = ($) => {
+const parseSearchRequest = ($, type) => {
     var _a, _b, _c;
     const tiles = [];
-    const results = $('.tab-content-wrap').find('.row.c-tabs-item__content');
-    for (let result of results.toArray()) {
-        // const id = article.attribs.class[0].split('-')[1]
-        const mangaId = (_a = $(result).find('.h4').find('a').first().attr('href')) === null || _a === void 0 ? void 0 : _a.split('manga/')[1];
-        const image = (_c = (_b = $(result).find('img')) === null || _b === void 0 ? void 0 : _b.first().attr('data-src')) !== null && _c !== void 0 ? _c : '';
-        const title = $(result).find('.h4').first().text().split(' ')[0];
-        tiles.push(createMangaTile({
-            id: mangaId,
-            image: image !== null && image !== void 0 ? image : 'https://i.imgur.com/GYUxEX8.png',
-            title: createIconText({
-                text: title,
-            }),
-        }));
+    let results;
+    //If serch is a title
+    if (type === 'title') {
+        results = $('.tab-content-wrap').find('.row.c-tabs-item__content');
+        for (let result of results.toArray()) {
+            // const id = article.attribs.class[0].split('-')[1]
+            const mangaId = (_a = $(result).find('.h4').find('a').first().attr('href')) === null || _a === void 0 ? void 0 : _a.split('manga/')[1];
+            const image = (_c = (_b = $(result).find('img')) === null || _b === void 0 ? void 0 : _b.first().attr('data-src')) !== null && _c !== void 0 ? _c : '';
+            const title = $(result).find('.h4').first().text().split(' ')[0];
+            tiles.push(createMangaTile({
+                id: mangaId,
+                image: image !== null && image !== void 0 ? image : 'https://i.imgur.com/GYUxEX8.png',
+                title: createIconText({
+                    text: title,
+                }),
+            }));
+        }
+    }
+    if (type === 'genre') {
     }
     return tiles;
 };
