@@ -15,7 +15,7 @@ describe('MangaGohan Tests', () => {
    * Try to choose a manga which is updated frequently, so that the historical checking test can
    * return proper results, as it is limited to searching 30 days back due to extremely long processing times otherwise.
    */
-  const mangaId = 'chabcc-jujutsukaisen-raw-free3' // Rent-a-Girlfriend
+  const mangaId = 'tienbo-kanojo-okarishimasu' // Rent-a-Girlfriend
 
   it('Retrieve Manga Details', async () => {
     const details = await wrapper.getMangaDetails(source, mangaId)
@@ -87,13 +87,13 @@ describe('MangaGohan Tests', () => {
     console.log('top:', homePages![1]!.items![0])
     console.log('recently updated:', homePages![2]!.items![0])
   })
-  it('Get tags', async () => {
-    const tags = await wrapper.getTags(source)
-    const taglist = tags![0]?.tags!
-    console.log(taglist)
-    expect(tags, 'No server response').to.exist
-    expect(tags, 'Empty server response').to.not.be.empty
-  })
+  // it('Get tags', async () => {
+  //   const tags = await wrapper.getTags(source)
+  //   const taglist = tags![0]?.tags!
+  //   console.log(taglist)
+  //   expect(tags, 'No server response').to.exist
+  //   expect(tags, 'Empty server response').to.not.be.empty
+  // })
 
   // it('Testing Notifications', async () => {
   //   const updates = await wrapper.filterUpdatedManga(

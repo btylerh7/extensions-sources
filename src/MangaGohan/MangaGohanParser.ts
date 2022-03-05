@@ -19,7 +19,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   let status = MangaStatus.UNKNOWN //All manga is listed as ongoing
   const author = $('.author-content').find('a').first().text()
   const artist = $('.artist-content').find('a').first().text()
-  const desc = $('.Y2IQFc').text()
+  const desc = $('.description-summary').find('p').first().text()
   // const tags: Tag[] = []
   // const data = $('.sub-menu').find('a')
   // for (const link of data.toArray()) {
@@ -91,9 +91,13 @@ export const parseChapterDetails = (
   })
 }
 
-export const parseSearchRequest = ($: CheerioStatic): MangaTile[] => {
+export const parseSearchRequest = ($: CheerioStatic, type: string): MangaTile[] => {
   const tiles: MangaTile[] = []
-  const results = $('.tab-content-wrap').find('.row.c-tabs-item__content')
+  let results
+  
+  //If serch is a title
+  if (type === 'title') {
+  results = $('.tab-content-wrap').find('.row.c-tabs-item__content')
 
   for (let result of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
@@ -110,6 +114,9 @@ export const parseSearchRequest = ($: CheerioStatic): MangaTile[] => {
         }),
       })
     )
+    }
+}
+  if(type === 'genre') {
   }
   return tiles
 }

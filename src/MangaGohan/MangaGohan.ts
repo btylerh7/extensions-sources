@@ -108,6 +108,7 @@ export class MangaGohan extends Source {
   }
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
+    let type
     // let request
     // if (query.includedTags) {
     //   request = createRequestObject({
@@ -115,6 +116,7 @@ export class MangaGohan extends Source {
     //     method,
     //     headers,
     //   })
+    type = 'title'
         const request = createRequestObject({
           url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
           method,
@@ -122,7 +124,7 @@ export class MangaGohan extends Source {
         })
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
-    const manga = parseSearchRequest($)
+    const manga = parseSearchRequest($, type)
     metadata = manga.length > 0 ? { page: page + 1 } : undefined
     // metadata = page
 
