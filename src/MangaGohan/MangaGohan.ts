@@ -118,7 +118,7 @@ export class MangaGohan extends Source {
     //   })
     type = 'title'
         const request = createRequestObject({
-          url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
+          url: encodeURI(`${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`),
           method,
           headers,
         })
