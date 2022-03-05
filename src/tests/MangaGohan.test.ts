@@ -63,6 +63,7 @@ describe('MangaGohan Tests', () => {
       title: 'kanojo',
       parameters: {
         includedTags: ['sf・ファンタジー'],
+        // includedTags:[]
       },
     }
 

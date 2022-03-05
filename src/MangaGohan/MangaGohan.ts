@@ -108,22 +108,18 @@ export class MangaGohan extends Source {
   }
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
-    let request
-    if (query.includedTags) {
-      request = createRequestObject({
-        url: `${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`,
-        method,
-        headers,
-      })
-    } else {
-      {
-        request = createRequestObject({
+    // let request
+    // if (query.includedTags) {
+    //   request = createRequestObject({
+    //     url: `${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`,
+    //     method,
+    //     headers,
+    //   })
+        const request = createRequestObject({
           url: `${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`,
           method,
           headers,
         })
-      }
-    }
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
     const manga = parseSearchRequest($)
@@ -132,7 +128,7 @@ export class MangaGohan extends Source {
 
     return createPagedResults({
       results: manga,
-      metadata,
+      metadata
     })
   }
   override async getHomePageSections(

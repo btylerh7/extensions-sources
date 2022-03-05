@@ -91,7 +91,7 @@ export const parseChapterDetails = (
   })
 }
 
-export const parseSearchRequest = ($: CheerioStatic) => {
+export const parseSearchRequest = ($: CheerioStatic): MangaTile[] => {
   const tiles: MangaTile[] = []
   const results = $('.tab-content-wrap').find('.row.c-tabs-item__content')
 
