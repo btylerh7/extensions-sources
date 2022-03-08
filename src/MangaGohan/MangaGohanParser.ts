@@ -19,35 +19,38 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
   let status = MangaStatus.UNKNOWN //All manga is listed as ongoing
   const author = $('.author-content').find('a').first().text()
   const artist = $('.artist-content').find('a').first().text()
-  const desc = $('.description-summary').find('p').first().text()
-  // const tags: Tag[] = []
-  // const data = $('.sub-menu').find('a')
-  // for (const link of data.toArray()) {
-  //   const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
-  //   const label = $(link).text().trim()
-  //   if (!id || !label) continue
-  //   if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
-  //   tags.push({ id: id!, label: label })
-  // }
-  // const tagSection: TagSection[] = [
-  //   createTagSection({
-  //     id: '0',
-  //     label: 'genres',
-  //     tags: tags.map((tag) => createTag(tag)),
-  //   }),
-  // ]
+  const rating = Number($('.score.font-meta.total_votes').text())
+  const desc = $('.description-summary').find('p').first().text().trim()
+  let hentai = false
+  const tags: Tag[] = []
+  const data = $('.genres-content').find('a')
+  for (const link of data.toArray()) {
+    const id = decodeURI($(link).attr('href')!.split('com/')[1]!)
+    const label = $(link).text().trim()
+    if (!id || !label) continue
+    if (!decodeURI($(link).attr('href')!.split('com/')[1]!)?.startsWith('manga-genre')) continue
+    if (label === 'manga-genre/hentai/') hentai = true
+    tags.push({ id: id!, label: label })
+  }
+  const tagSection: TagSection[] = [
+    createTagSection({
+      id: '0',
+      label: 'genres',
+      tags: tags.map((tag) => createTag(tag)),
+    }),
+  ]
   console.log('Get Manga Function: title:',titles,'image',image,'mangaId', mangaId)
   return createManga({
     id: mangaId,
     titles: titles,
     image: image ?? 'https://i.imgur.com/GYUxEX8.png',
-    rating: 0,
+    rating: rating ?? 0,
     status: status,
     author: author,
     artist: artist,
-    // tags: tagSection,
+    tags: tagSection,
     desc: desc ?? '',
-    // hentai
+    hentai
   })
 }
 
@@ -101,9 +104,9 @@ export const parseSearchRequest = ($: CheerioStatic, type: string): MangaTile[] 
 
   for (let result of results.toArray()) {
     // const id = article.attribs.class[0].split('-')[1]
-    const mangaId = $(result).find('.h4').find('a').first().attr('href')?.split('manga/')[1]!
+    const mangaId = $(result).find('.h4').find('a').first().attr('href')?.split('manga/')[1] ?? ''
     const image = $(result).find('img')?.first().attr('data-src') ?? ''
-    const title = $(result).find('.h4').first().text().split(' ')[0]!
+    const title = $(result).find('.h4').first().text().split(' ')[0] ?? ''
 
     tiles.push(
       createMangaTile({
@@ -116,7 +119,25 @@ export const parseSearchRequest = ($: CheerioStatic, type: string): MangaTile[] 
     )
     }
 }
-  if(type === 'genre') {
+  // If there is a genre search
+  if(type === 'tag') {
+    results = $('.tab-content-wrap').find('.page-item-detail.manga')
+    for (let result of results.toArray()) {
+    const mangaId = $('h3.h5', result).find('a').first().attr('href')?.split('manga/')[1] ?? ''
+    const image = $(result).find('img').first().attr('data-src') ?? ''
+    const title = $('h3.h5', result).find('a').first().text().trim() ?? ''
+    if (!mangaId || !title) continue
+
+    tiles.push(
+      createMangaTile({
+        id: mangaId,
+        image: image ?? 'https://i.imgur.com/GYUxEX8.png',
+        title: createIconText({
+          text: title,
+        }),
+      })
+    )
+    }
   }
   return tiles
 }

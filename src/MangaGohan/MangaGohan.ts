@@ -17,7 +17,7 @@ import {
   SourceInfo,
   // RequestHeaders,
   TagType,
-  // TagSection,
+  TagSection,
 } from 'paperback-extensions-common'
 import {
     parseMangaDetails,
@@ -25,7 +25,7 @@ import {
     parseChapterDetails,
     parseSearchRequest,
     parseHomeSections,
-  // parseTags,
+  parseTags,
 } from './MangaGohanParser'
 
 export const MG_DOMAIN = 'https://mangagohan.com'
@@ -108,20 +108,23 @@ export class MangaGohan extends Source {
   }
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
-    let type
-    // let request
-    // if (query.includedTags) {
-    //   request = createRequestObject({
-    //     url: `${MG_DOMAIN}/${query.includedTags?.map((x: any) => x.id)[0]}`,
-    //     method,
-    //     headers,
-    //   })
-    type = 'title'
-        const request = createRequestObject({
-          url: encodeURI(`${MG_DOMAIN}/?s=${query.title}&post_type=wp-manga&post_type=wp-manga`),
-          method,
-          headers,
-        })
+    let type: string = 'title'
+    let request
+    if(query.title) {
+      request = createRequestObject({
+        url: MG_DOMAIN,
+        param: `/?s=${encodeURI(query.title)}&post_type=wp-manga&post_type=wp-manga`,
+        method,
+        headers,
+      })
+    }
+    else {
+      if(query.includedTags) type = 'tag'
+      request = createRequestObject({
+        url:`${MG_DOMAIN}/${encodeURI(query.includedTags?.map((x: any) => x.id)[0])}`,
+        method,
+        headers,
+      })}
     const data = await this.requestManager.schedule(request, 1)
     let $ = this.cheerio.load(data.data)
     const manga = parseSearchRequest($, type)
@@ -146,14 +149,14 @@ export class MangaGohan extends Source {
     const $ = this.cheerio.load(response.data)
     parseHomeSections($, sectionCallback)
   }
-  // override async getTags(): Promise<TagSection[]> {
-  //   const request = createRequestObject({
-  //     url: MG_DOMAIN,
-  //     method,
-  //     headers,
-  //   })
-  //   const response = await this.requestManager.schedule(request, 1)
-  //   const $ = this.cheerio.load(response.data)
-  //   return parseTags($)
-  // }
+  override async getSearchTags(): Promise<TagSection[]> {
+    const request = createRequestObject({
+      url: MG_DOMAIN,
+      method,
+      headers,
+    })
+    const response = await this.requestManager.schedule(request, 1)
+    const $ = this.cheerio.load(response.data)
+    return parseTags($)
+  }
 }

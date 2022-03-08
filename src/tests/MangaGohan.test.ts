@@ -60,10 +60,10 @@ describe('MangaGohan Tests', () => {
 
   it('Testing search', async () => {
     const testSearch: SearchRequest = {
-      title: 'kanojo',
+      title: '',
       parameters: {
-        includedTags: ['sf・ファンタジー'],
-        // includedTags:[]
+        // includedTags: ['sf・ファンタジー'],
+        includedTags:[]
       },
     }
 
