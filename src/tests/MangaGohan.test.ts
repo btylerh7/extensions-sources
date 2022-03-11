@@ -49,7 +49,7 @@ describe('MangaGohan Tests', () => {
     // console.log(chapter)
 
     const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
-    // console.log(data)
+    console.log(data)
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
 
