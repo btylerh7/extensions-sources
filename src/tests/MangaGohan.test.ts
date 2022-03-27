@@ -23,7 +23,7 @@ describe('MangaGohan Tests', () => {
 
     // Validate that the fields are filled
     const data = details
-    console.log(data)
+    console.log("manga details:",data)
     expect(data.image, 'Missing Image').to.be.not.empty
     expect(data.status, 'Missing Status').to.exist
     expect(data.desc, 'Missing Description').to.be.not.empty
@@ -49,7 +49,7 @@ describe('MangaGohan Tests', () => {
     // console.log(chapter)
 
     const data = await wrapper.getChapterDetails(source, mangaId, chapters[0]?.id ?? 'unknown')
-    console.log(data)
+    console.log("chapter data:", data)
     expect(data, 'No server response').to.exist
     expect(data, 'Empty server response').to.not.be.empty
 
