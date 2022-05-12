@@ -28,7 +28,7 @@ import {
   parseTags,
 } from './MangaGohanParser'
 
-export const MG_DOMAIN = 'https://mangagohan.com'
+export const MG_DOMAIN = 'https://mangagohan.me'
 const headers = {
   'content-type': 'application/x-www-form-urlencoded',
   Referer: MG_DOMAIN,
@@ -106,6 +106,8 @@ export class MangaGohan extends Source {
 
     return parseChapterDetails($, mangaId, chapterId)
   }
+
+  // TODO Needs serious refactoring and updates. Does not page correctly.
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
     let page: number = metadata?.page ?? 1
     let type: string = 'title'
